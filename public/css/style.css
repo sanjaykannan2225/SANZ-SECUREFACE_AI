@@ -697,3 +697,108 @@ body {
 .text-center { text-align: center; }
 .w-full { width: 100%; }
 .hidden { display: none !important; }
+
+/* =========================
+   MOBILE RESPONSIVE
+========================= */
+
+@media (max-width: 768px) {
+
+  body{
+    overflow-x:hidden;
+  }
+
+  /* Navbar */
+  nav{
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px;
+  }
+
+  .nav-links{
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  /* Hero */
+  .hero{
+    padding: 40px 20px;
+    text-align: center;
+  }
+
+  .hero h1{
+    font-size: 2rem;
+    line-height: 1.2;
+  }
+
+  .hero p{
+    font-size: 0.95rem;
+  }
+
+  /* Buttons */
+  .hero-buttons{
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .hero-buttons a{
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Video / Scan */
+  .video-container,
+  video,
+  canvas{
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  /* Dashboard */
+  .dashboard-container{
+    flex-direction: column;
+  }
+
+  .sidebar{
+    width: 100%;
+    height: auto;
+  }
+
+  .dashboard-main{
+    width: 100%;
+    padding: 15px;
+  }
+
+  /* Tables */
+  table{
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  /* Footer */
+  .footer-grid{
+    grid-template-columns: 1fr;
+    gap: 30px;
+    text-align: center;
+  }
+
+  /* About section */
+  .about-container{
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .about-image img{
+    width: 180px;
+    height: 180px;
+  }
+
+  /* Inputs */
+  input,
+  button{
+    width: 100%;
+  }
+
+}
