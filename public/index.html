@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sanz SecureFace AI — Next-Gen Attendance</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    /* ── HERO ─────────────────────────────── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 100px 40px 60px;
+      position: relative;
+    }
+
+    .hero-content {
+      max-width: 1200px;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(0,212,255,0.08);
+      border: 1px solid rgba(0,212,255,0.2);
+      border-radius: 50px;
+      padding: 8px 20px;
+      margin-bottom: 24px;
+    }
+
+    .hero-eyebrow-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--neon-green);
+      animation: dotPulse 2s ease infinite;
+    }
+
+    .hero-eyebrow span {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--neon-blue);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      font-weight: 900;
+      line-height: 1.05;
+      margin-bottom: 24px;
+    }
+
+    .hero-title .line-2 {
+      color: var(--neon-blue);
+      text-shadow: 0 0 30px rgba(0,212,255,0.5);
+    }
+
+    .hero-title .line-3 {
+      background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-desc {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      line-height: 1.8;
+      margin-bottom: 40px;
+      max-width: 480px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 40px;
+      margin-top: 48px;
+      padding-top: 32px;
+      border-top: 1px solid rgba(0,212,255,0.1);
+    }
+
+    .hero-stat-num {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--neon-blue);
+      text-shadow: 0 0 15px rgba(0,212,255,0.4);
+    }
+
+    .hero-stat-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* ── AI FACE VISUAL ───────────────────── */
+    .hero-visual {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .face-scanner {
+      position: relative;
+      width: 320px;
+      height: 320px;
+    }
+
+    .scanner-ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid;
+      animation: ringPulse 3s ease infinite;
+    }
+
+    .scanner-ring:nth-child(1) {
+      inset: 0;
+      border-color: rgba(0,212,255,0.4);
+      animation-delay: 0s;
+    }
+
+    .scanner-ring:nth-child(2) {
+      inset: 20px;
+      border-color: rgba(0,212,255,0.3);
+      animation-delay: 0.5s;
+    }
+
+    .scanner-ring:nth-child(3) {
+      inset: 40px;
+      border-color: rgba(180,0,255,0.3);
+      animation-delay: 1s;
+    }
+
+    @keyframes ringPulse {
+      0%,100% { opacity: 0.3; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.03); }
+    }
+
+    .scanner-face-area {
+      position: absolute;
+      inset: 60px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,212,255,0.08) 0%, transparent 70%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .face-icon {
+      font-size: 5rem;
+      animation: faceFloat 4s ease infinite;
+    }
+
+    @keyframes faceFloat {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    /* Corner brackets */
+    .scan-bracket {
+      position: absolute;
+      width: 28px;
+      height: 28px;
+    }
+
+    .scan-bracket.tl { top: 55px; left: 55px; border-top: 3px solid var(--neon-blue); border-left: 3px solid var(--neon-blue); }
+    .scan-bracket.tr { top: 55px; right: 55px; border-top: 3px solid var(--neon-blue); border-right: 3px solid var(--neon-blue); }
+    .scan-bracket.bl { bottom: 55px; left: 55px; border-bottom: 3px solid var(--neon-blue); border-left: 3px solid var(--neon-blue); }
+    .scan-bracket.br { bottom: 55px; right: 55px; border-bottom: 3px solid var(--neon-blue); border-right: 3px solid var(--neon-blue); }
+
+    .scan-line {
+      position: absolute;
+      left: 60px; right: 60px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
+      animation: scanMove 3s ease infinite;
+      box-shadow: 0 0 10px var(--neon-blue);
+    }
+
+    @keyframes scanMove {
+      0% { top: 60px; opacity: 1; }
+      80% { opacity: 1; }
+      100% { top: calc(100% - 60px); opacity: 0; }
+    }
+
+    .scanner-data {
+      position: absolute;
+      right: -80px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .data-item {
+      background: rgba(0,212,255,0.06);
+      border: 1px solid rgba(0,212,255,0.15);
+      border-radius: 6px;
+      padding: 6px 14px;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--neon-blue);
+      white-space: nowrap;
+      animation: dataFlicker 4s linear infinite;
+    }
+
+    .data-item:nth-child(2) { animation-delay: 1.2s; }
+    .data-item:nth-child(3) { animation-delay: 2.4s; }
+
+    @keyframes dataFlicker {
+      0%,90%,100% { opacity: 1; }
+      92%,98% { opacity: 0.3; }
+    }
+
+    /* ── FEATURES SECTION ─────────────────── */
+    .features {
+      padding: 100px 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .features-header { text-align: center; margin-bottom: 60px; }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .feature-card {
+      padding: 32px;
+      border-radius: var(--radius-lg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
+    }
+
+    .feature-icon-wrap {
+      width: 56px; height: 56px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+    }
+
+    .feature-icon-wrap.blue { background: rgba(0,212,255,0.12); box-shadow: 0 0 20px rgba(0,212,255,0.1); }
+    .feature-icon-wrap.purple { background: rgba(180,0,255,0.12); box-shadow: 0 0 20px rgba(180,0,255,0.1); }
+    .feature-icon-wrap.green { background: rgba(0,255,136,0.12); box-shadow: 0 0 20px rgba(0,255,136,0.1); }
+    .feature-icon-wrap.amber { background: rgba(255,170,0,0.12); box-shadow: 0 0 20px rgba(255,170,0,0.1); }
+
+    .feature-title {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: var(--text-primary);
+      letter-spacing: 1px;
+    }
+
+    .feature-desc {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    /* ── HOW IT WORKS ─────────────────────── */
+    .how-section {
+      padding: 80px 40px;
+      background: rgba(0,212,255,0.02);
+      border-top: 1px solid rgba(0,212,255,0.07);
+      border-bottom: 1px solid rgba(0,212,255,0.07);
+    }
+
+    .how-inner { max-width: 1100px; margin: 0 auto; }
+    .how-steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 32px;
+      margin-top: 56px;
+    }
+
+    .how-step {
+      text-align: center;
+    }
+
+    .step-number {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: transparent;
+      border: 2px solid var(--neon-blue);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--neon-blue);
+      margin: 0 auto 20px;
+      box-shadow: 0 0 20px rgba(0,212,255,0.25);
+    }
+
+    .step-title {
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+
+    .step-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* ── CTA ──────────────────────────────── */
+    .cta-section {
+      padding: 100px 40px;
+      text-align: center;
+    }
+
+    .cta-inner { max-width: 600px; margin: 0 auto; }
+    .cta-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-top: 40px; }
+
+  footer{
+  margin-top:100px;
+  padding:60px 8%;
+  background:#050816;
+  border-top:1px solid #00e5ff33;
+}
+
+.footer-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:40px;
+}
+
+.footer-box h3{
+  color:#00e5ff;
+  margin-bottom:20px;
+  font-size:18px;
+}
+
+.footer-box p,
+.footer-box a{
+  display:block;
+  color:#9aa4b2;
+  margin-bottom:10px;
+  text-decoration:none;
+}
+
+.footer-box a:hover{
+  color:#00e5ff;
+}
+
+.footer-bottom{
+  margin-top:40px;
+  padding-top:20px;
+  border-top:1px solid #1a2332;
+  text-align:center;
+  color:#6b7280;
+}
+  </style>
+</head>
+<body>
+  <!-- Background -->
+  <div class="bg-grid"></div>
+  <div class="bg-glow"></div>
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- Loading Screen -->
+  <div id="loading-screen">
+    <div class="loading-logo">⬡ SANZ SECUREFACE AI</div>
+    <div class="loading-bar-wrap"><div class="loading-bar"></div></div>
+    <div class="loading-text">INITIALIZING AI SYSTEMS...</div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <a href="index.html" class="nav-brand">
+      <div class="nav-logo-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+      </div>
+      <div class="nav-brand-text">SANZ <span>SECUREFACE</span> AI</div>
+    </a>
+
+    <button class="nav-burger" id="navBurger" onclick="toggleNav()">
+      <span></span><span></span><span></span>
+    </button>
+
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="scan.html">Live Scan</a></li>
+      <li><a href="register.html">Register</a></li>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="about.html">ABOUT</a></li>
+    </ul>
+
+    <div class="nav-clock" id="navClock">--:--:--</div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-left">
+        <div class="hero-eyebrow">
+          <div class="hero-eyebrow-dot"></div>
+          <span>AI-Powered Security System</span>
+        </div>
+
+        <h1 class="hero-title">
+          Next-Gen<br>
+          <span class="line-2">Face Recognition</span><br>
+          <span class="line-3">Attendance AI</span>
+        </h1>
+
+        <p class="hero-desc">
+          Military-grade facial biometrics powered by deep learning. 
+          Real-time detection, automatic attendance marking, and enterprise analytics — 
+          all in one seamless platform.
+        </p>
+
+        <div class="hero-buttons">
+          <a href="scan.html" class="btn btn-primary">
+            ⬡ START SCANNING
+          </a>
+          <a href="register.html" class="btn btn-secondary">
+            + REGISTER FACE
+          </a>
+          <a href="dashboard.html" class="btn btn-purple">
+            ▣ DASHBOARD
+          </a>
+        </div>
+
+        <div class="hero-stats">
+          <div>
+            <div class="hero-stat-num" id="statUsers">0</div>
+            <div class="hero-stat-label">Registered</div>
+          </div>
+          <div>
+            <div class="hero-stat-num" id="statToday">0</div>
+            <div class="hero-stat-label">Today</div>
+          </div>
+          <div>
+            <div class="hero-stat-num" id="statTotal">0</div>
+            <div class="hero-stat-label">All Records</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="face-scanner">
+          <div class="scanner-ring"></div>
+          <div class="scanner-ring"></div>
+          <div class="scanner-ring"></div>
+          <div class="scan-bracket tl"></div>
+          <div class="scan-bracket tr"></div>
+          <div class="scan-bracket bl"></div>
+          <div class="scan-bracket br"></div>
+          <div class="scan-line"></div>
+          <div class="scanner-face-area">
+            <div class="face-icon">🤖</div>
+          </div>
+          <div class="scanner-data">
+            <div class="data-item">FACE_ID: 0xA3F2</div>
+            <div class="data-item">CONF: 99.7%</div>
+            <div class="data-item">MATCH: ✅</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features">
+    <div class="features-header">
+      <div class="section-label">What We Offer</div>
+      <h2 class="section-title">Powered by <span class="highlight">Deep Learning</span></h2>
+      <p style="color: var(--text-secondary); max-width: 520px; margin: 0 auto; font-size: 1rem;">
+        Enterprise-grade AI features designed for accuracy, speed, and seamless workflow integration.
+      </p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card glass-card">
+        <div class="feature-icon-wrap blue">🔍</div>
+        <div class="feature-title">REAL-TIME DETECTION</div>
+        <p class="feature-desc">
+          Sub-100ms face detection using TinyFaceDetector. Works with masks, glasses, and varying lighting conditions.
+        </p>
+      </div>
+
+      <div class="feature-card glass-card">
+        <div class="feature-icon-wrap purple">🧠</div>
+        <div class="feature-title">AI RECOGNITION</div>
+        <p class="feature-desc">
+          FaceRecognitionNet neural network with 128-dimension embeddings. Exact and approximate matching with confidence scores.
+        </p>
+      </div>
+
+      <div class="feature-card glass-card">
+        <div class="feature-icon-wrap green">📋</div>
+        <div class="feature-title">AUTO ATTENDANCE</div>
+        <p class="feature-desc">
+          One-touch attendance marking. Duplicate prevention, Google Sheets sync, and CSV export built in.
+        </p>
+      </div>
+
+      <div class="feature-card glass-card">
+        <div class="feature-icon-wrap amber">📊</div>
+        <div class="feature-title">LIVE DASHBOARD</div>
+        <p class="feature-desc">
+          Real-time analytics, weekly charts, registered users gallery, and searchable attendance history.
+        </p>
+      </div>
+
+      <div class="feature-card glass-card">
+        <div class="feature-icon-wrap blue">🔒</div>
+        <div class="feature-title">SESSION CONTROL</div>
+        <p class="feature-desc">
+          Smart session management ensures each person is marked only once per day, preventing duplicate records.
+        </p>
+      </div>
+
+      <div class="feature-card glass-card">
+        <div class="feature-icon-wrap purple">☁️</div>
+        <div class="feature-title">CLOUD SYNC</div>
+        <p class="feature-desc">
+          Automatic Google Sheets integration. All attendance records synced in real-time with your spreadsheet.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how-section">
+    <div class="how-inner">
+      <div style="text-align:center; margin-bottom: 0;">
+        <div class="section-label">Workflow</div>
+        <h2 class="section-title">How It <span class="highlight">Works</span></h2>
+      </div>
+      <div class="how-steps">
+        <div class="how-step">
+          <div class="step-number">01</div>
+          <div class="step-title">REGISTER FACE</div>
+          <p class="step-desc">Upload a clear photo and enter your name. Our AI extracts facial embeddings for recognition.</p>
+        </div>
+        <div class="how-step">
+          <div class="step-number">02</div>
+          <div class="step-title">LIVE SCAN</div>
+          <p class="step-desc">Stand before the camera. TinyFaceDetector identifies your face in under 100ms.</p>
+        </div>
+        <div class="how-step">
+          <div class="step-number">03</div>
+          <div class="step-title">AI MATCH</div>
+          <p class="step-desc">FaceMatcher compares embeddings against all registered users with distance scoring.</p>
+        </div>
+        <div class="how-step">
+          <div class="step-number">04</div>
+          <div class="step-title">ATTENDANCE MARKED</div>
+          <p class="step-desc">Match confirmed — attendance logged to database, dashboard, and Google Sheets instantly.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="cta-inner">
+      <div class="section-label">Get Started Now</div>
+      <h2 class="section-title">Ready to <span class="highlight">Secure</span> Your Attendance?</h2>
+      <p style="color: var(--text-secondary); font-size: 1rem; line-height: 1.8;">
+        Start scanning in seconds. Register your team and experience the future of attendance management.
+      </p>
+      <div class="cta-buttons">
+        <a href="scan.html" class="btn btn-primary">⬡ START LIVE SCAN</a>
+        <a href="register.html" class="btn btn-secondary">+ REGISTER FACE</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="glow-line" style="margin: 0;"></div>
+
+ <footer class="footer">
+  <div class="footer-grid">
+
+    <div class="footer-box">
+      <h3>SANZ SECUREFACE AI</h3>
+      <p>
+        Advanced AI-powered face recognition attendance and security system
+        with real-time detection and smart analytics.
+      </p>
+    </div>
+
+    <div class="footer-box">
+      <h3>QUICK LINKS</h3>
+      <a href="index.html">Home</a>
+      <a href="scan.html">Live Scan</a>
+      <a href="register.html">Register</a>
+      <a href="dashboard.html">Dashboard</a>
+    </div>
+
+    <div class="footer-box">
+      <h3>FEATURES</h3>
+      <p>✔ Real-time Face Detection</p>
+      <p>✔ AI Recognition System</p>
+      <p>✔ Attendance Analytics</p>
+      <p>✔ Smart Dashboard</p>
+    </div>
+
+    <div class="footer-box">
+      <h3>CONTACT</h3>
+      <p>Email: sanjaykannan2225@sanzai.com</p>
+      <p>Location: Tiruppur, 641 666 ,Tamil Nadu, India</p>
+      <p>Status: 🟢 System Online</p>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    © 2026 SANZ SECUREFACE AI • Developed by Sanjay
+  </div>
+</footer>
+
+  <script>
+    // Loading screen
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('loading-screen').classList.add('hidden');
+      }, 2200);
+    });
+
+    // Nav clock
+    function updateClock() {
+      const now = new Date();
+      document.getElementById('navClock').textContent = now.toLocaleTimeString('en-US', { hour12: false });
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    function toggleNav() {
+      document.getElementById('navLinks').classList.toggle('open');
+    }
+
+    // Fetch stats
+    async function loadStats() {
+      try {
+        const res = await fetch('/api/dashboard');
+        const data = await res.json();
+        animateNum('statUsers', data.totalUsers);
+        animateNum('statToday', data.todayCount);
+        animateNum('statTotal', data.totalRecords);
+      } catch(e) { console.log('Stats unavailable'); }
+    }
+
+    function animateNum(id, target) {
+      const el = document.getElementById(id);
+      let current = 0;
+      const step = Math.max(1, Math.ceil(target / 30));
+      const interval = setInterval(() => {
+        current = Math.min(current + step, target);
+        el.textContent = current;
+        if (current >= target) clearInterval(interval);
+      }, 50);
+    }
+
+    // Particles
+    const canvas = document.getElementById('particles-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    resize();
+    window.addEventListener('resize', resize);
+
+    for (let i = 0; i < 60; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * 2 + 0.5,
+        sx: (Math.random() - 0.5) * 0.3,
+        sy: (Math.random() - 0.5) * 0.3,
+        opacity: Math.random() * 0.4 + 0.1
+      });
+    }
+
+    function drawParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(0, 212, 255, ${p.opacity})`;
+        ctx.fill();
+        p.x += p.sx;
+        p.y += p.sy;
+        if (p.x < 0 || p.x > canvas.width) p.sx *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.sy *= -1;
+      });
+      requestAnimationFrame(drawParticles);
+    }
+
+    drawParticles();
+    loadStats();
+  </script>
+</body>
+</html>

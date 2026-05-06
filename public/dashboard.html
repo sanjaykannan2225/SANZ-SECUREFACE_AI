@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — Sanz SecureFace AI</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .dashboard-layout {
+      display: flex;
+      min-height: 100vh;
+      padding-top: 72px;
+    }
+
+    /* ── SIDEBAR ─────────────────────────── */
+    .dash-sidebar {
+      width: 240px;
+      background: rgba(2,8,16,0.95);
+      border-right: 1px solid rgba(0,212,255,0.1);
+      padding: 28px 0;
+      position: fixed;
+      top: 72px;
+      left: 0;
+      bottom: 0;
+      overflow-y: auto;
+      z-index: 10;
+    }
+
+    .dash-nav-section {
+      padding: 0 16px;
+      margin-bottom: 8px;
+    }
+
+    .dash-nav-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 0 12px;
+      margin-bottom: 6px;
+    }
+
+    .dash-nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-decoration: none;
+      letter-spacing: 0.5px;
+    }
+
+    .dash-nav-item:hover, .dash-nav-item.active {
+      background: rgba(0,212,255,0.08);
+      color: var(--neon-blue);
+      border-left: 2px solid var(--neon-blue);
+    }
+
+    .dash-nav-icon { font-size: 1rem; }
+
+    .dash-sep {
+      height: 1px;
+      background: rgba(0,212,255,0.08);
+      margin: 16px;
+    }
+
+    /* ── MAIN CONTENT ─────────────────────── */
+    .dash-main {
+      margin-left: 240px;
+      flex: 1;
+      padding: 32px;
+      max-width: calc(100vw - 240px);
+    }
+
+    .dash-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .dash-title {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+    }
+
+    .dash-title span { color: var(--neon-blue); }
+
+    .dash-date {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      letter-spacing: 2px;
+    }
+
+    /* ── SECTIONS ─────────────────────────── */
+    .dash-section { display: none; }
+    .dash-section.active { display: block; }
+
+    /* ── WEEK CHART ───────────────────────── */
+    .week-chart {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      height: 120px;
+      padding: 12px;
+    }
+
+    .week-bar-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      height: 100%;
+    }
+
+    .week-bar-container {
+      flex: 1;
+      width: 100%;
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .week-bar {
+      width: 100%;
+      background: linear-gradient(to top, var(--neon-blue), rgba(0,212,255,0.4));
+      border-radius: 4px 4px 0 0;
+      min-height: 4px;
+      transition: height 0.6s cubic-bezier(0.4,0,0.2,1);
+      position: relative;
+    }
+
+    .week-bar:hover { background: linear-gradient(to top, var(--neon-cyan), var(--neon-blue)); }
+
+    .week-bar-label {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      color: var(--text-muted);
+      text-align: center;
+      letter-spacing: 1px;
+    }
+
+    .week-bar-val {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--neon-blue);
+    }
+
+    /* ── SEARCH BAR ───────────────────────── */
+    .search-bar {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 12px 16px 12px 44px;
+      background: rgba(0,212,255,0.05);
+      border: 1px solid rgba(0,212,255,0.15);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    .search-input:focus {
+      border-color: var(--neon-blue);
+      box-shadow: 0 0 15px rgba(0,212,255,0.15);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1rem;
+      color: var(--text-muted);
+    }
+
+    /* ── USER GALLERY ─────────────────────── */
+    .user-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 16px;
+    }
+
+    .user-card {
+      padding: 20px 16px;
+      text-align: center;
+      border-radius: var(--radius);
+    }
+
+    .user-card-photo {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(0,212,255,0.3);
+      margin: 0 auto 12px;
+      display: block;
+      box-shadow: 0 0 15px rgba(0,212,255,0.15);
+    }
+
+    .user-card-name {
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .user-card-date {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+    }
+
+    .user-card-del {
+      margin-top: 10px;
+      padding: 5px 14px;
+      background: rgba(255,45,85,0.1);
+      border: 1px solid rgba(255,45,85,0.2);
+      border-radius: 6px;
+      color: var(--neon-red);
+      font-size: 0.7rem;
+      cursor: pointer;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      transition: all 0.2s ease;
+    }
+
+    .user-card-del:hover {
+      background: rgba(255,45,85,0.2);
+      box-shadow: 0 0 10px rgba(255,45,85,0.3);
+    }
+
+    /* ── TABLE FILTERS ────────────────────── */
+    .table-toolbar {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .date-filter {
+      padding: 10px 14px;
+      background: rgba(0,212,255,0.05);
+      border: 1px solid rgba(0,212,255,0.15);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      outline: none;
+    }
+
+    .date-filter:focus { border-color: var(--neon-blue); }
+
+    /* ── MOBILE ───────────────────────────── */
+    @media (max-width: 800px) {
+      .dash-sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        top: 0;
+        border-right: none;
+        border-bottom: 1px solid rgba(0,212,255,0.1);
+        padding: 12px 0;
+        display: flex;
+        overflow-x: auto;
+        flex-direction: row;
+      }
+      .dash-nav-section { display: flex; gap: 4px; padding: 0 8px; margin: 0; }
+      .dash-nav-label { display: none; }
+      .dash-sep { display: none; }
+      .dash-main { margin-left: 0; max-width: 100%; padding: 16px; }
+      .dashboard-layout { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <div class="bg-glow"></div>
+  <div id="toast-container"></div>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <a href="index.html" class="nav-brand">
+      <div class="nav-logo-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+      </div>
+      <div class="nav-brand-text">SANZ <span>SECUREFACE</span> AI</div>
+    </a>
+    <button class="nav-burger" onclick="toggleNav()"><span></span><span></span><span></span></button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="scan.html">Live Scan</a></li>
+      <li><a href="register.html">Register</a></li>
+      <li><a href="dashboard.html" class="active">Dashboard</a></li>
+    </ul>
+    <div class="nav-clock" id="navClock">--:--:--</div>
+  </nav>
+
+  <div class="dashboard-layout">
+
+    <!-- Sidebar Nav -->
+    <div class="dash-sidebar">
+      <div class="dash-nav-section">
+        <div class="dash-nav-label">Overview</div>
+        <a class="dash-nav-item active" onclick="showSection('overview')" href="#">
+          <span class="dash-nav-icon">📊</span> Overview
+        </a>
+        <a class="dash-nav-item" onclick="showSection('attendance')" href="#">
+          <span class="dash-nav-icon">📋</span> Attendance
+        </a>
+        <a class="dash-nav-item" onclick="showSection('users')" href="#">
+          <span class="dash-nav-icon">👥</span> Users
+        </a>
+      </div>
+      <div class="dash-sep"></div>
+      <div class="dash-nav-section">
+        <div class="dash-nav-label">Actions</div>
+        <a class="dash-nav-item" href="scan.html">
+          <span class="dash-nav-icon">⬡</span> Live Scan
+        </a>
+        <a class="dash-nav-item" href="register.html">
+          <span class="dash-nav-icon">+</span> Register Face
+        </a>
+        <a class="dash-nav-item" href="/api/export" target="_blank">
+          <span class="dash-nav-icon">⬇</span> Export CSV
+        </a>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="dash-main">
+      <div class="dash-header">
+        <div>
+          <div class="dash-title">ADMIN <span>DASHBOARD</span></div>
+          <div class="dash-date" id="dashDate">Loading...</div>
+        </div>
+        <div style="display:flex; gap:12px; align-items:center;">
+          <div class="status-chip flex gap-8 items-center" style="background: rgba(0,255,136,0.06); border-color: rgba(0,255,136,0.15); padding: 8px 16px; border-radius: 50px; font-family: var(--font-mono); font-size: 0.75rem; color: var(--neon-green); letter-spacing: 1px;">
+            <div class="status-dot"></div>
+            SYSTEM ONLINE
+          </div>
+          <button class="btn btn-secondary btn-sm" onclick="refreshAll()">↻ REFRESH</button>
+        </div>
+      </div>
+
+      <!-- ── OVERVIEW SECTION ── -->
+      <div class="dash-section active" id="section-overview">
+
+        <!-- Stat Cards -->
+        <div class="stat-cards">
+          <div class="stat-card glass-card blue">
+            <div class="stat-icon blue">👥</div>
+            <div class="stat-number blue" id="statUsers">--</div>
+            <div class="stat-label">Total Registered</div>
+          </div>
+          <div class="stat-card glass-card green">
+            <div class="stat-icon green">✅</div>
+            <div class="stat-number green" id="statToday">--</div>
+            <div class="stat-label">Today Present</div>
+          </div>
+          <div class="stat-card glass-card purple">
+            <div class="stat-icon purple">📋</div>
+            <div class="stat-number purple" id="statTotal">--</div>
+            <div class="stat-label">All Records</div>
+          </div>
+          <div class="stat-card glass-card amber">
+            <div class="stat-icon amber">📈</div>
+            <div class="stat-number amber" id="statRate">--%</div>
+            <div class="stat-label">Attendance Rate</div>
+          </div>
+        </div>
+
+        <!-- Weekly Chart -->
+        <div class="glass-card" style="padding: 24px; margin-bottom: 32px;">
+          <div style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--neon-blue); letter-spacing: 2px; margin-bottom: 8px;">
+            WEEKLY ATTENDANCE — LAST 7 DAYS
+          </div>
+          <div class="week-chart" id="weekChart">
+            <div style="color: var(--text-muted); font-size: 0.8rem;">Loading chart...</div>
+          </div>
+        </div>
+
+        <!-- Recent Attendance -->
+        <div class="glass-card" style="padding: 24px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+            <div style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--neon-blue); letter-spacing: 2px;">
+              RECENT ATTENDANCE
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="showSection('attendance')">VIEW ALL →</button>
+          </div>
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead><tr>
+                <th>Name</th><th>Date</th><th>Time</th><th>Match</th>
+              </tr></thead>
+              <tbody id="recentTableBody">
+                <tr><td colspan="4" style="text-align:center;color:var(--text-muted);">Loading...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── ATTENDANCE SECTION ── -->
+      <div class="dash-section" id="section-attendance">
+        <div class="table-toolbar">
+          <div class="search-bar" style="flex:1; min-width:200px; margin-bottom:0;">
+            <span class="search-icon">🔍</span>
+            <input type="text" class="search-input" id="searchInput" placeholder="Search by name..." oninput="filterAttendance()" />
+          </div>
+          <input type="date" class="date-filter" id="dateFilter" onchange="filterAttendance()" />
+          <button class="btn btn-success btn-sm" onclick="window.open('/api/export')">⬇ EXPORT CSV</button>
+<button class="btn btn-danger btn-sm" onclick="clearAttendance()">🗑 CLEAR ATTENDANCE</button>        </div>
+
+        <div class="glass-card">
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead><tr>
+                <th>#</th><th>Name</th><th>Date</th><th>Time</th><th>Match Type</th>
+              </tr></thead>
+              <tbody id="attendTableBody">
+                <tr><td colspan="5" style="text-align:center;color:var(--text-muted);">Loading...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div style="margin-top: 12px; font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted);">
+          Showing <span id="attendCount">0</span> records
+        </div>
+      </div>
+
+      <!-- ── USERS SECTION ── -->
+      <div class="dash-section" id="section-users">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+          <div style="font-family:var(--font-mono); font-size:0.72rem; color:var(--neon-blue); letter-spacing:2px;">
+            REGISTERED MEMBERS — <span id="userCountLabel">0</span> TOTAL
+          </div>
+          <a href="register.html" class="btn btn-primary btn-sm">+ REGISTER NEW FACE</a>
+        </div>
+        <div class="user-gallery" id="userGallery">
+          <div style="color:var(--text-muted);">Loading...</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // ── GLOBALS ───────────────────────────────
+    let allAttendance = [];
+
+    // ── CLOCK ─────────────────────────────────
+    function updateClock() {
+      const now = new Date();
+      document.getElementById('navClock').textContent = now.toLocaleTimeString('en-US', { hour12: false });
+      document.getElementById('dashDate').textContent = now.toLocaleDateString('en-US', {
+        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+      });
+    }
+    setInterval(updateClock, 1000); updateClock();
+    function toggleNav() { document.getElementById('navLinks').classList.toggle('open'); }
+
+    // ── TOAST ─────────────────────────────────
+    function showToast(msg, type = 'info') {
+      const tc = document.getElementById('toast-container');
+      const t = document.createElement('div');
+      t.className = `toast ${type}`;
+      const icons = { success: '✅', error: '❌', info: 'ℹ️', warning: '⚠️' };
+      t.innerHTML = `<span>${icons[type]}</span> ${msg}`;
+      tc.appendChild(t);
+      setTimeout(() => t.remove(), 4000);
+    }
+
+    // ── NAV SECTIONS ──────────────────────────
+    function showSection(name) {
+      document.querySelectorAll('.dash-section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.dash-nav-item').forEach(a => a.classList.remove('active'));
+      document.getElementById('section-' + name).classList.add('active');
+      event && event.target && event.target.classList.add('active');
+      if (name === 'attendance') loadAttendance();
+      if (name === 'users') loadUsers();
+    }
+
+    // ── LOAD DASHBOARD ─────────────────────────
+    async function loadDashboard() {
+      try {
+        const res = await fetch('/api/dashboard');
+        const d = await res.json();
+
+        // Animate numbers
+        animateNum('statUsers', d.totalUsers);
+        animateNum('statToday', d.todayCount);
+        animateNum('statTotal', d.totalRecords);
+
+        const rate = d.totalUsers > 0 ? Math.round((d.todayCount / d.totalUsers) * 100) : 0;
+        document.getElementById('statRate').textContent = rate + '%';
+
+        // Week chart
+        renderWeekChart(d.weekStats || []);
+
+        // Recent table
+        renderRecentTable(d.recentAttendance || []);
+
+      } catch (e) {
+        console.error('Dashboard error:', e);
+        showToast('Backend not running. Start server first.', 'error');
+      }
+    }
+
+    function animateNum(id, target) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      let cur = 0;
+      const step = Math.max(1, Math.ceil(target / 30));
+      const iv = setInterval(() => {
+        cur = Math.min(cur + step, target);
+        el.textContent = cur;
+        if (cur >= target) clearInterval(iv);
+      }, 50);
+    }
+
+    function renderWeekChart(data) {
+      const chart = document.getElementById('weekChart');
+      const max = Math.max(...data.map(d => d.count), 1);
+      chart.innerHTML = data.map(d => {
+        const pct = (d.count / max) * 100;
+        const day = new Date(d.date + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'short' });
+        return `
+          <div class="week-bar-wrap">
+            <div class="week-bar-val">${d.count}</div>
+            <div class="week-bar-container">
+              <div class="week-bar" style="height:${Math.max(pct, 4)}%"></div>
+            </div>
+            <div class="week-bar-label">${day}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderRecentTable(records) {
+      const tbody = document.getElementById('recentTableBody');
+      if (!records.length) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--text-muted);">No records yet</td></tr>';
+        return;
+      }
+      tbody.innerHTML = records.slice(0,8).map(r => `
+        <tr>
+          <td style="color:var(--text-primary); font-weight:700;">${r.name}</td>
+          <td>${r.date}</td>
+          <td style="font-family:var(--font-mono);">${r.time}</td>
+          <td>${matchBadge(r.matchType)}</td>
+        </tr>
+      `).join('');
+    }
+
+    // ── ATTENDANCE TABLE ───────────────────────
+    async function loadAttendance() {
+      try {
+        const res = await fetch('/api/attendance');
+        allAttendance = await res.json();
+        renderAttendanceTable(allAttendance);
+      } catch (e) {
+        showToast('Failed to load attendance', 'error');
+      }
+    }
+
+    function renderAttendanceTable(data) {
+      const tbody = document.getElementById('attendTableBody');
+      document.getElementById('attendCount').textContent = data.length;
+      if (!data.length) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted);">No records found</td></tr>';
+        return;
+      }
+      tbody.innerHTML = data.map((r, i) => `
+        <tr>
+          <td style="color:var(--text-muted); font-family:var(--font-mono);">${i+1}</td>
+          <td style="color:var(--text-primary); font-weight:700;">${r.name}</td>
+          <td style="font-family:var(--font-mono);">${r.date}</td>
+          <td style="font-family:var(--font-mono);">${r.time}</td>
+          <td>${matchBadge(r.matchType)}</td>
+        </tr>
+      `).join('');
+    }
+
+    function filterAttendance() {
+      const search = document.getElementById('searchInput').value.toLowerCase();
+      const date = document.getElementById('dateFilter').value;
+      let filtered = allAttendance;
+      if (search) filtered = filtered.filter(r => r.name.toLowerCase().includes(search));
+      if (date) filtered = filtered.filter(r => r.date === date);
+      renderAttendanceTable(filtered);
+    }
+
+    function clearFilters() {
+      document.getElementById('searchInput').value = '';
+      document.getElementById('dateFilter').value = '';
+      renderAttendanceTable(allAttendance);
+    }
+
+    // ── USERS GALLERY ──────────────────────────
+    async function loadUsers() {
+      try {
+        const res = await fetch('/api/users');
+        const users = await res.json();
+        document.getElementById('userCountLabel').textContent = users.length;
+
+        const gallery = document.getElementById('userGallery');
+        if (!users.length) {
+          gallery.innerHTML = `
+            <div style="grid-column:1/-1; text-align:center; padding:60px 20px; color:var(--text-muted);">
+              <div style="font-size:3rem; margin-bottom:16px;">👤</div>
+              <div>No users registered yet.</div>
+              <a href="register.html" class="btn btn-primary btn-sm" style="margin-top:16px; display:inline-flex;">+ Register First Face</a>
+            </div>
+          `;
+          return;
+        }
+
+        gallery.innerHTML = users.map(u => `
+          <div class="user-card glass-card">
+            <img class="user-card-photo" src="${u.image}" alt="${u.name}" 
+              onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 70 70%22><circle cx=%2235%22 cy=%2235%22 r=%2235%22 fill=%22%23051020%22/><text x=%2235%22 y=%2245%22 text-anchor=%22middle%22 fill=%22%2300d4ff%22 font-size=%2232%22>👤</text></svg>'" />
+            <div class="user-card-name">${u.name}</div>
+            <div class="user-card-date">${new Date(u.registeredAt).toLocaleDateString()}</div>
+            <button class="user-card-del" onclick="deleteUser('${u.id}', '${u.name}')">🗑 DELETE</button>
+          </div>
+        `).join('');
+      } catch (e) {
+        showToast('Failed to load users', 'error');
+      }
+    }
+
+    async function deleteUser(id, name) {
+      if (!confirm(`Delete ${name}? This cannot be undone.`)) return;
+      try {
+        const res = await fetch(`/api/users/${id}`, { method: 'DELETE' });
+        const data = await res.json();
+        if (data.success) {
+          showToast(`Deleted: ${name}`, 'success');
+          loadUsers();
+          loadDashboard();
+        } else {
+          showToast('Delete failed', 'error');
+        }
+      } catch (e) {
+        showToast('Server error', 'error');
+      }
+    }
+
+    // ── HELPERS ────────────────────────────────
+    function matchBadge(type) {
+      if (!type || type === 'Exact Match') return '<span class="badge badge-exact">✅ Exact</span>';
+      if (type === 'Approx Match') return '<span class="badge badge-approx">⚠ Approx</span>';
+      return '<span class="badge badge-failed">❌ Failed</span>';
+    }
+
+    function refreshAll() {
+      loadDashboard();
+      loadAttendance();
+      showToast('Dashboard refreshed', 'info');
+    }
+
+async function clearAttendance() {
+  const ok = confirm('Delete all attendance records?');
+  if (!ok) return;
+
+  try {
+    const response = await fetch('/api/attendance/clear', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      attendanceData = [];
+      renderAttendance();
+      showToast('Attendance cleared', 'success');
+    } else {
+      showToast('Failed to clear attendance', 'error');
+    }
+
+  } catch (err) {
+    console.error(err);
+    showToast('Server error', 'error');
+  }
+}
+
+    // ── INIT ───────────────────────────────────
+    loadDashboard();
+    loadAttendance();
+  </script>
+</body>
+</html>

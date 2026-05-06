@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>About | SANZ SECUREFACE AI</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;800&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    body{
+      background:#030712;
+      color:white;
+      font-family:'Rajdhani',sans-serif;
+      overflow-x:hidden;
+    }
+
+    /* BACKGROUND */
+
+    .bg-grid{
+      position:fixed;
+      width:100%;
+      height:100%;
+      background:
+      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size:40px 40px;
+      z-index:-2;
+    }
+
+    .glow{
+      position:fixed;
+      width:500px;
+      height:500px;
+      background:#00d9ff;
+      filter:blur(180px);
+      opacity:0.12;
+      top:-100px;
+      right:-100px;
+      z-index:-1;
+    }
+
+    /* NAVBAR */
+
+    .navbar{
+      width:100%;
+      padding:20px 8%;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      border-bottom:1px solid rgba(0,217,255,0.1);
+      backdrop-filter:blur(10px);
+      position:sticky;
+      top:0;
+      z-index:100;
+      background:rgba(3,7,18,0.8);
+    }
+
+    .logo{
+      font-size:24px;
+      font-family:'Orbitron',sans-serif;
+      font-weight:800;
+      color:white;
+      letter-spacing:2px;
+    }
+
+    .logo span{
+      color:#00d9ff;
+      text-shadow:0 0 15px #00d9ff;
+    }
+
+    .nav-links{
+      display:flex;
+      gap:25px;
+    }
+
+    .nav-links a{
+      color:#9ca3af;
+      text-decoration:none;
+      transition:0.3s;
+      font-weight:600;
+      letter-spacing:1px;
+    }
+
+    .nav-links a:hover{
+      color:#00d9ff;
+    }
+
+    /* ABOUT SECTION */
+
+    .about-section{
+      width:100%;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:80px 8%;
+    }
+
+    .about-container{
+      width:100%;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:80px;
+      flex-wrap:wrap;
+    }
+
+    .about-left{
+      flex:1;
+      min-width:320px;
+    }
+
+    .tag{
+      color:#00d9ff;
+      letter-spacing:4px;
+      font-size:14px;
+      margin-bottom:20px;
+    }
+
+    .title{
+      font-size:65px;
+      font-weight:800;
+      line-height:1.1;
+      margin-bottom:25px;
+      font-family:'Orbitron',sans-serif;
+    }
+
+    .title span{
+      color:#00d9ff;
+      text-shadow:0 0 20px #00d9ff;
+    }
+
+    .desc{
+      color:#9ca3af;
+      line-height:1.9;
+      font-size:18px;
+      max-width:650px;
+      margin-bottom:40px;
+    }
+
+    /* INFO CARDS */
+
+    .info-cards{
+      display:flex;
+      gap:20px;
+      flex-wrap:wrap;
+      margin-bottom:40px;
+    }
+
+    .card{
+      min-width:170px;
+      padding:22px;
+      border-radius:18px;
+      border:1px solid rgba(0,217,255,0.2);
+      background:rgba(255,255,255,0.03);
+      backdrop-filter:blur(10px);
+      transition:0.4s;
+    }
+
+    .card:hover{
+      transform:translateY(-6px);
+      box-shadow:0 0 30px rgba(0,217,255,0.25);
+      border-color:#00d9ff;
+    }
+
+    .card h3{
+      color:#00d9ff;
+      margin-bottom:10px;
+      font-size:14px;
+      letter-spacing:2px;
+    }
+
+    .card p{
+      font-size:22px;
+      font-weight:700;
+    }
+
+    .online{
+      color:#00ff88;
+    }
+
+    /* SOCIAL */
+
+    .socials{
+      display:flex;
+      gap:20px;
+      flex-wrap:wrap;
+    }
+
+    .socials a{
+      padding:14px 28px;
+      border:1px solid #00d9ff;
+      border-radius:12px;
+      text-decoration:none;
+      color:#00d9ff;
+      transition:0.4s;
+      font-weight:700;
+      letter-spacing:1px;
+    }
+
+    .socials a:hover{
+      background:#00d9ff;
+      color:black;
+      box-shadow:0 0 25px #00d9ff;
+    }
+
+    /* RIGHT */
+
+    .about-right{
+      flex:1;
+      display:flex;
+      justify-content:center;
+      min-width:320px;
+    }
+
+    .profile-box{
+      width:370px;
+      height:450px;
+      border-radius:25px;
+      overflow:hidden;
+      position:relative;
+      border:2px solid rgba(0,217,255,0.25);
+      background:rgba(255,255,255,0.03);
+      backdrop-filter:blur(10px);
+      box-shadow:0 0 40px rgba(0,217,255,0.15);
+    }
+
+    .profile-box img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+
+    .scan-line{
+      position:absolute;
+      width:100%;
+      height:4px;
+      background:#00d9ff;
+      box-shadow:0 0 20px #00d9ff;
+      animation:scan 3s linear infinite;
+    }
+
+    @keyframes scan{
+      0%{
+        top:0;
+      }
+      100%{
+        top:100%;
+      }
+    }
+
+    .circle{
+      position:absolute;
+      width:300px;
+      height:300px;
+      background:#00d9ff;
+      filter:blur(120px);
+      opacity:0.15;
+      top:-50px;
+      right:-50px;
+    }
+
+    /* FOOTER */
+
+    .footer{
+      padding:30px;
+      text-align:center;
+      border-top:1px solid rgba(255,255,255,0.08);
+      color:#6b7280;
+      letter-spacing:1px;
+    }
+
+    /* MOBILE */
+
+    @media(max-width:900px){
+
+      .about-container{
+        flex-direction:column;
+      }
+
+      .title{
+        font-size:42px;
+      }
+
+      .profile-box{
+        width:100%;
+        max-width:350px;
+      }
+
+      .nav-links{
+        display:none;
+      }
+
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="bg-grid"></div>
+  <div class="glow"></div>
+
+  <!-- NAVBAR -->
+
+  <nav class="navbar">
+
+    <div class="logo">
+      SANZ <span>SECUREFACE AI</span>
+    </div>
+
+    <div class="nav-links">
+      <a href="index.html">HOME</a>
+      <a href="scan.html">SCAN</a>
+      <a href="register.html">REGISTER</a>
+      <a href="dashboard.html">DASHBOARD</a>
+    </div>
+
+  </nav>
+
+  <!-- ABOUT SECTION -->
+
+  <section class="about-section">
+
+    <div class="about-container">
+
+      <!-- LEFT -->
+
+      <div class="about-left">
+
+        <div class="tag">
+          AI DEVELOPER • CYBER UI DESIGNER
+        </div>
+
+        <h1 class="title">
+         <span>SANJAY</span>
+        </h1>
+
+        <p class="desc">
+          Passionate AI developer focused on futuristic web experiences,
+          face recognition systems, cyber security UI design, and
+          real-time smart attendance management solutions using modern AI technologies.
+        </p>
+
+        <div class="info-cards">
+
+          <div class="card">
+            <h3>PROJECTS</h3>
+            <p>15+</p>
+          </div>
+
+          <div class="card">
+            <h3>SPECIALITY</h3>
+            <p>AI SYSTEMS</p>
+          </div>
+
+          <div class="card">
+            <h3>STATUS</h3>
+            <p class="online">ONLINE</p>
+          </div>
+
+        </div>
+
+        <div class="socials">
+
+          <a href="https://github.com/sanjaykannan2225" target="_blank">
+            GITHUB
+          </a>
+
+          <a href="https://www.linkedin.com/in/sanjayk017/" target="_blank">
+            LINKEDIN
+          </a>
+
+          <a href="https://www.instagram.com/sanjay.__.28?igsh=eWlpcGlkemdmeWJs" target="_blank">
+            INSTAGRAM
+          </a>
+
+        </div>
+
+      </div>
+
+      <!-- RIGHT -->
+
+      <div class="about-right">
+
+        <div class="profile-box">
+
+          <div class="circle"></div>
+
+<img src="uploads/sanjay.jpg" alt="Sanjay">
+          <div class="scan-line"></div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- FOOTER -->
+
+  <div class="footer">
+    © 2026 SANZ SECUREFACE AI • Developed By Sanjay
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Live Scan — Sanz SecureFace AI</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <!-- face-api.js from CDN -->
+
+  <style>
+    .scan-page {
+      min-height: 100vh;
+      display: flex;
+      align-items: stretch;
+      padding-top: 72px;
+    }
+
+    /* ── MAIN SCAN AREA ─────────────────── */
+    .scan-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 20px;
+      gap: 24px;
+    }
+
+    .scan-header {
+      text-align: center;
+    }
+
+    .scan-header h1 {
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      font-weight: 800;
+      color: var(--text-primary);
+      letter-spacing: 3px;
+    }
+
+    .scan-header h1 span { color: var(--neon-blue); text-shadow: 0 0 20px rgba(0,212,255,0.5); }
+
+    /* ── VIDEO CONTAINER ───────────────── */
+    .video-container {
+      position: relative;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 2px solid rgba(0,212,255,0.3);
+      box-shadow: 0 0 40px rgba(0,212,255,0.15), 0 0 80px rgba(0,212,255,0.05);
+      animation: scanPulse 3s ease infinite;
+      width: 100%;
+      max-width: 640px;
+    }
+
+    .video-container.matched-exact {
+      border-color: var(--neon-green);
+      box-shadow: 0 0 40px rgba(0,255,136,0.3);
+      animation: matchGreen 1.5s ease infinite;
+    }
+
+    .video-container.matched-approx {
+      border-color: var(--neon-amber);
+      box-shadow: 0 0 40px rgba(255,170,0,0.3);
+      animation: matchAmber 1.5s ease infinite;
+    }
+
+    .video-container.not-matched {
+      border-color: var(--neon-red);
+      box-shadow: 0 0 40px rgba(255,45,85,0.3);
+      animation: matchRed 1.5s ease infinite;
+    }
+
+    #webcam {
+      width: 100%;
+      display: block;
+      transform: scaleX(-1);
+    }
+
+    #overlay {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      transform: scaleX(-1);
+    }
+
+    /* Corner brackets on video */
+    .vid-bracket {
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      z-index: 5;
+    }
+
+    .vid-bracket.tl { top: 12px; left: 12px; border-top: 3px solid var(--neon-blue); border-left: 3px solid var(--neon-blue); }
+    .vid-bracket.tr { top: 12px; right: 12px; border-top: 3px solid var(--neon-blue); border-right: 3px solid var(--neon-blue); }
+    .vid-bracket.bl { bottom: 12px; left: 12px; border-bottom: 3px solid var(--neon-blue); border-left: 3px solid var(--neon-blue); }
+    .vid-bracket.br { bottom: 12px; right: 12px; border-bottom: 3px solid var(--neon-blue); border-right: 3px solid var(--neon-blue); }
+
+    /* Scan line on video */
+    .vid-scan-line {
+      position: absolute;
+      left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
+      animation: vidScanMove 2s linear infinite;
+      z-index: 4;
+      pointer-events: none;
+    }
+
+    @keyframes vidScanMove {
+      0% { top: 0; opacity: 1; }
+      80% { opacity: 1; }
+      100% { top: 100%; opacity: 0; }
+    }
+
+    /* ── STATUS PANEL ──────────────────── */
+    .status-panel {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .status-chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: 50px;
+      background: rgba(0,212,255,0.06);
+      border: 1px solid rgba(0,212,255,0.15);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      letter-spacing: 1px;
+    }
+
+    /* ── DETECTION BOX RESULT ──────────── */
+    .detection-result {
+      background: var(--bg-card);
+      border: 1px solid var(--border-glow);
+      border-radius: var(--radius);
+      padding: 20px 28px;
+      text-align: center;
+      min-width: 300px;
+      width: 100%;
+      max-width: 640px;
+      transition: all 0.3s ease;
+    }
+
+    .detection-result.exact {
+      border-color: rgba(0,255,136,0.3);
+      background: rgba(0,255,136,0.05);
+      box-shadow: 0 0 30px rgba(0,255,136,0.1);
+    }
+
+    .detection-result.approx {
+      border-color: rgba(255,170,0,0.3);
+      background: rgba(255,170,0,0.05);
+      box-shadow: 0 0 30px rgba(255,170,0,0.1);
+    }
+
+    .detection-result.none {
+      border-color: rgba(255,45,85,0.3);
+      background: rgba(255,45,85,0.05);
+    }
+
+    .detection-label {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 800;
+      letter-spacing: 3px;
+      margin-bottom: 6px;
+    }
+
+    .detection-label.green { color: var(--neon-green); text-shadow: 0 0 20px rgba(0,255,136,0.5); }
+    .detection-label.amber { color: var(--neon-amber); text-shadow: 0 0 20px rgba(255,170,0,0.5); }
+    .detection-label.red { color: var(--neon-red); }
+    .detection-label.muted { color: var(--text-muted); }
+
+    .detection-sub {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+    }
+
+    .detection-name {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      font-weight: 600;
+      margin-top: 6px;
+    }
+
+    /* ── SIDEBAR ───────────────────────── */
+    .scan-sidebar {
+      width: 300px;
+      background: rgba(2,8,16,0.9);
+      border-left: 1px solid rgba(0,212,255,0.1);
+      padding: 30px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      overflow-y: auto;
+    }
+
+    .sidebar-section-title {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--neon-blue);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(0,212,255,0.1);
+    }
+
+    /* ── ATTENDANCE LOG ─────────────────── */
+    .attend-log {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .attend-item {
+      padding: 10px 14px;
+      background: rgba(0,255,136,0.06);
+      border: 1px solid rgba(0,255,136,0.15);
+      border-radius: 8px;
+      animation: slideInRight 0.4s ease forwards;
+    }
+
+    @keyframes slideInRight {
+      from { transform: translateX(20px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .attend-name {
+      font-weight: 700;
+      color: var(--neon-green);
+      font-size: 0.9rem;
+    }
+
+    .attend-time {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* ── REGISTERED USERS MINI ─────────── */
+    .mini-user-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .mini-user {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      background: rgba(0,212,255,0.04);
+      border: 1px solid rgba(0,212,255,0.1);
+      border-radius: 8px;
+    }
+
+    .mini-user img {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid rgba(0,212,255,0.25);
+    }
+
+    .mini-user-name {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    /* ── LOADING AI ─────────────────────── */
+    .ai-loading {
+      text-align: center;
+      padding: 30px;
+    }
+
+    .ai-spinner {
+      width: 50px;
+      height: 50px;
+      border: 3px solid rgba(0,212,255,0.1);
+      border-top-color: var(--neon-blue);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 16px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .ai-loading-text {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--neon-blue);
+      letter-spacing: 2px;
+    }
+
+    /* Controls */
+    .scan-controls {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    @media (max-width: 900px) {
+      .scan-page { flex-direction: column; }
+      .scan-sidebar { width: 100%; border-left: none; border-top: 1px solid rgba(0,212,255,0.1); max-height: 300px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <div class="bg-glow"></div>
+  <div id="toast-container"></div>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <a href="index.html" class="nav-brand">
+      <div class="nav-logo-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+      </div>
+      <div class="nav-brand-text">SANZ <span>SECUREFACE</span> AI</div>
+    </a>
+    <button class="nav-burger" onclick="toggleNav()"><span></span><span></span><span></span></button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="scan.html" class="active">Live Scan</a></li>
+      <li><a href="register.html">Register</a></li>
+      <li><a href="dashboard.html">Dashboard</a></li>
+    </ul>
+    <div class="nav-clock" id="navClock">--:--:--</div>
+  </nav>
+
+  <div class="scan-page">
+
+    <!-- Main Scan Area -->
+    <div class="scan-main">
+      <div class="scan-header">
+        <div class="section-label">AI Face Recognition</div>
+        <h1>LIVE <span>SCAN</span> MODE</h1>
+      </div>
+
+      <!-- AI Loading -->
+      <div class="ai-loading" id="aiLoading">
+        <div class="ai-spinner"></div>
+        <div class="ai-loading-text" id="aiLoadingText">LOADING AI MODELS...</div>
+      </div>
+
+      <!-- Video Container -->
+      <div class="video-container" id="videoContainer" style="display:none;">
+        <video id="webcam" autoplay muted playsinline></video>
+        <canvas id="overlay"></canvas>
+        <div class="vid-bracket tl"></div>
+        <div class="vid-bracket tr"></div>
+        <div class="vid-bracket bl"></div>
+        <div class="vid-bracket br"></div>
+        <div class="vid-scan-line"></div>
+      </div>
+
+      <!-- Status Chips -->
+      <div class="status-panel" id="statusPanel" style="display:none;">
+        <div class="status-chip">
+          <div class="status-dot" id="camDot"></div>
+          <span id="camStatus">CAMERA ACTIVE</span>
+        </div>
+        <div class="status-chip">
+          <div class="status-dot" id="aiFaceDot" style="background:var(--neon-blue); animation: none;"></div>
+          <span id="faceStatus">SCANNING...</span>
+        </div>
+        <div class="status-chip">
+          <span>FPS: </span>
+          <span id="fpsCounter" style="color: var(--neon-cyan);">--</span>
+        </div>
+      </div>
+
+      <!-- Detection Result -->
+      <div class="detection-result" id="detectionResult" style="display:none;">
+        <div class="detection-label muted" id="resultLabel">AWAITING FACE</div>
+        <div class="detection-name" id="resultName"></div>
+        <div class="detection-sub" id="resultSub">Point camera at face to begin</div>
+      </div>
+
+      <!-- Controls -->
+      <div class="scan-controls" id="scanControls" style="display:none;">
+        <button class="btn btn-secondary btn-sm" onclick="pauseResume()" id="pauseBtn">⏸ PAUSE</button>
+        <a href="register.html" class="btn btn-purple btn-sm">+ REGISTER NEW</a>
+        <a href="dashboard.html" class="btn btn-secondary btn-sm">▣ DASHBOARD</a>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="scan-sidebar">
+      <!-- Today's Attendance Log -->
+      <div>
+        <div class="sidebar-section-title">📋 Session Attendance</div>
+        <div class="attend-log" id="attendLog">
+          <span style="font-size:0.8rem; color:var(--text-muted);">No attendance yet</span>
+        </div>
+      </div>
+
+      <!-- Registered Users -->
+      <div>
+        <div class="sidebar-section-title">👥 Registered Users</div>
+        <div class="mini-user-list" id="miniUserList">
+          <span style="font-size:0.8rem; color:var(--text-muted);">Loading...</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <audio id="successSound">
+  <source src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" type="audio/mpeg">
+</audio>
+
+  <script src="/js/face-api.min.js"></script>
+  <script>
+    // ── GLOBALS ────────────────────────────────────────────────
+    let modelsLoaded = false;
+    let labeledFaceDescriptors = [];
+    let faceMatcher = null;
+    let isRunning = false;
+    let animationId = null;
+    let markedToday = new Set();
+    let lastFps = 0;
+    let frameCount = 0;
+    let lastFpsTime = Date.now();
+    const API = '';
+
+    const video = document.getElementById('webcam');
+    const canvas = document.getElementById('overlay');
+    const videoContainer = document.getElementById('videoContainer');
+
+    // ── CLOCK ──────────────────────────────────────────────────
+    function updateClock() {
+      document.getElementById('navClock').textContent = new Date().toLocaleTimeString('en-US', { hour12: false });
+    }
+    setInterval(updateClock, 1000); updateClock();
+    function toggleNav() { document.getElementById('navLinks').classList.toggle('open'); }
+
+    // ── TOAST ─────────────────────────────────────────────────
+    function showToast(msg, type = 'info') {
+      const tc = document.getElementById('toast-container');
+      const t = document.createElement('div');
+      t.className = `toast ${type}`;
+      const icons = { success: '✅', error: '❌', info: 'ℹ️', warning: '⚠️' };
+      t.innerHTML = `<span>${icons[type]}</span> ${msg}`;
+      tc.appendChild(t);
+      setTimeout(() => t.remove(), 5000);
+    }
+
+    // ── STATUS UPDATE ──────────────────────────────────────────
+    function setLoadingText(txt) {
+      document.getElementById('aiLoadingText').textContent = txt;
+    }
+
+    function showScanUI() {
+      document.getElementById('aiLoading').style.display = 'none';
+      videoContainer.style.display = 'block';
+      document.getElementById('statusPanel').style.display = 'flex';
+      document.getElementById('detectionResult').style.display = 'block';
+      document.getElementById('scanControls').style.display = 'flex';
+    }
+
+    // ── LOAD FACE-API MODELS ───────────────────────────────────
+async function loadModels() {
+  setLoadingText('LOADING TINYFACE DETECTOR...');
+  await faceapi.nets.tinyFaceDetector.loadFromUri('/models');
+
+  setLoadingText('LOADING LANDMARK NET...');
+  await faceapi.nets.faceLandmark68Net.loadFromUri('/models');
+
+  setLoadingText('LOADING RECOGNITION NET...');
+  await faceapi.nets.faceRecognitionNet.loadFromUri('/models');
+
+  modelsLoaded = true;
+  console.log('✅ AI Models loaded');
+}
+
+    // ── LOAD REGISTERED USERS ──────────────────────────────────
+    async function loadRegisteredUsers() {
+      try {
+        const res = await fetch('/api/users');
+        const users = await res.json();
+
+        // Mini user list
+        const list = document.getElementById('miniUserList');
+        if (users.length === 0) {
+          list.innerHTML = '<span style="font-size:0.8rem;color:var(--text-muted);">No users registered</span>';
+        } else {
+          list.innerHTML = users.map(u => `
+            <div class="mini-user">
+              <img src="${u.image}" alt="${u.name}" onerror="this.style.display='none'" />
+              <span class="mini-user-name">${u.name}</span>
+            </div>
+          `).join('');
+        }
+
+        if (users.length === 0) {
+          setLoadingText('NO USERS REGISTERED. Please register faces first.');
+          return false;
+        }
+
+        // Build labeled descriptors
+        setLoadingText(`PROCESSING ${users.length} FACE(S)...`);
+        const descriptors = [];
+
+        for (const user of users) {
+          try {
+            const img = await faceapi.fetchImage(user.image);
+            const detection = await faceapi
+  .detectSingleFace(
+    img,
+    new faceapi.TinyFaceDetectorOptions({
+      inputSize: 320,
+      scoreThreshold: 0.5
+    })
+  )
+  .withFaceLandmarks()
+  .withFaceDescriptor();
+            if (detection) {
+              descriptors.push(new faceapi.LabeledFaceDescriptors(user.name, [detection.descriptor]));
+              console.log(`✅ Processed: ${user.name}`);
+            } else {
+              console.warn(`⚠️ No face found for: ${user.name}`);
+            }
+          } catch (e) {
+            console.warn(`❌ Error processing ${user.name}:`, e);
+          }
+        }
+
+        if (descriptors.length === 0) {
+          setLoadingText('COULD NOT PROCESS FACES. Ensure clear face images are uploaded.');
+          return false;
+        }
+
+        labeledFaceDescriptors = descriptors;
+        faceMatcher = new faceapi.FaceMatcher(descriptors, 0.7);
+        console.log(`✅ FaceMatcher ready with ${descriptors.length} faces`);
+        return true;
+      } catch (e) {
+        console.error('Load users error:', e);
+        setLoadingText('BACKEND NOT RUNNING. Start server first.');
+        return false;
+      }
+    }
+
+    // ── START WEBCAM ───────────────────────────────────────────
+    async function startWebcam() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { width: 640, height: 480, facingMode: 'user' }
+        });
+        video.srcObject = stream;
+        return new Promise(resolve => { video.onloadedmetadata = () => resolve(); });
+      } catch (e) {
+        setLoadingText('CAMERA ACCESS DENIED. Please allow camera.');
+        showToast('Camera permission denied', 'error');
+        throw e;
+      }
+    }
+
+    // ── SET OVERLAY SIZE ──────────────────────────────────────
+    function resizeOverlay() {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+    }
+
+    // ── UPDATE RESULT UI ──────────────────────────────────────
+    function setResult(type, label, name, sub) {
+      const el = document.getElementById('detectionResult');
+      const labelEl = document.getElementById('resultLabel');
+      const nameEl = document.getElementById('resultName');
+      const subEl = document.getElementById('resultSub');
+
+      el.className = 'detection-result ' + (type || '');
+      labelEl.className = 'detection-label ' + ({ exact: 'green', approx: 'amber', none: 'red', '': 'muted' }[type] || 'muted');
+      labelEl.textContent = label;
+      nameEl.textContent = name || '';
+      subEl.textContent = sub || '';
+
+      // Video border
+      videoContainer.className = 'video-container ' + (type === 'exact' ? 'matched-exact' : type === 'approx' ? 'matched-approx' : type === 'none' ? 'not-matched' : '');
+    }
+
+    // ── DETECTION LOOP ─────────────────────────────────────────
+    async function detectionLoop() {
+      if (!isRunning) return;
+      const ctx = canvas.getContext('2d');
+      try {
+        const detections = await faceapi
+          .detectAllFaces(video, new faceapi.TinyFaceDetectorOptions({ inputSize: 320, scoreThreshold: 0.5 }))
+          .withFaceLandmarks()
+          .withFaceDescriptors();
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        const faceStatus = document.getElementById('faceStatus');
+
+        if (detections.length === 0) {
+          setResult('', 'NO FACE DETECTED', '', 'Point camera at face');
+          faceStatus.textContent = 'NO FACE';
+          document.getElementById('aiFaceDot').style.background = 'var(--text-muted)';
+        } else {
+          faceStatus.textContent = `${detections.length} FACE(S)`;
+          document.getElementById('aiFaceDot').style.background = 'var(--neon-blue)';
+
+          const displaySize = { width: video.videoWidth, height: video.videoHeight };
+          const resized = faceapi.resizeResults(detections, displaySize);
+
+          resized.forEach((det, i) => {
+            const { x, y, width, height } = det.detection.box;
+
+            let matchType = 'none';
+            let label = '❌ NOT MATCHED';
+            let name = 'Unknown';
+            let sub = '';
+            let boxColor = '#ff2d55';
+
+            if (faceMatcher) {
+              const match = faceMatcher.findBestMatch(det.descriptor);
+              const dist = match.distance;
+
+              if (dist < 0.5) {
+                matchType = 'exact';
+                label = '✅ EXACT MATCH';
+                name = match.label;
+                sub = `Confidence: ${((1 - dist) * 100).toFixed(1)}%`;
+                boxColor = '#00ff88';
+                if (!markedToday.has(match.label)) markAttendance(match.label, 'Exact Match');
+              } else if (dist < 0.7) {
+                matchType = 'approx';
+                label = '⚠ APPROX MATCH';
+                name = match.label;
+                sub = `Confidence: ${((1 - dist) * 100).toFixed(1)}%`;
+                boxColor = '#ffaa00';
+                if (!markedToday.has(match.label)) markAttendance(match.label, 'Approx Match');
+              } else {
+                sub = `Best: ${match.label} (${(dist).toFixed(2)})`;
+              }
+            }
+
+            if (i === 0) setResult(matchType, label, name, sub);
+
+            // Draw box
+            ctx.strokeStyle = boxColor;
+            ctx.lineWidth = 2;
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = boxColor;
+            ctx.strokeRect(x, y, width, height);
+            ctx.shadowBlur = 0;
+
+            // Label background
+            const labelText = name !== 'Unknown' ? `  ${name}  ` : '  Unknown  ';
+            ctx.font = 'bold 14px Rajdhani, sans-serif';
+            const tw = ctx.measureText(labelText).width;
+            ctx.fillStyle = boxColor + 'cc';
+            ctx.fillRect(x, y - 26, tw + 10, 26);
+            ctx.fillStyle = '#fff';
+            ctx.fillText(labelText, x + 5, y - 8);
+
+            // Landmark dots
+            if (det.landmarks) {
+              ctx.fillStyle = boxColor;
+              det.landmarks.positions.forEach(pt => {
+                ctx.beginPath();
+                ctx.arc(pt.x, pt.y, 2, 0, Math.PI * 2);
+                ctx.fill();
+              });
+            }
+          });
+        }
+      } catch (e) {
+        console.error('Detection error:', e);
+      }
+
+      // FPS
+      frameCount++;
+      const now = Date.now();
+      if (now - lastFpsTime >= 1000) {
+        document.getElementById('fpsCounter').textContent = frameCount;
+        frameCount = 0;
+        lastFpsTime = now;
+      }
+
+      animationId = requestAnimationFrame(detectionLoop);
+    }
+
+    // ── MARK ATTENDANCE ────────────────────────────────────────
+    async function markAttendance(name, matchType) {
+      markedToday.add(name); // Optimistic lock
+      document.getElementById('successSound').play();
+      try {
+        const res = await fetch('/api/attendance', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, matchType })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          showToast(`✅ Attendance marked: ${name}`, 'success');
+          playBeep();
+          addToLog(name, data.record.time, matchType);
+        } else if (data.duplicate) {
+          showToast(`Already marked: ${name}`, 'info');
+        }
+      } catch (e) {
+        console.error('Attendance error:', e);
+        markedToday.delete(name);
+      }
+    }
+
+    function addToLog(name, time, type) {
+      const log = document.getElementById('attendLog');
+      if (log.querySelector('span')) log.innerHTML = '';
+
+      const item = document.createElement('div');
+      item.className = 'attend-item';
+      item.innerHTML = `
+        <div class="attend-name">${name}</div>
+        <div class="attend-time">${time} · ${type}</div>
+      `;
+      log.prepend(item);
+    }
+
+    // ── SOUND ─────────────────────────────────────────────────
+    function playBeep() {
+      try {
+        const ac = new AudioContext();
+        const osc = ac.createOscillator();
+        const gain = ac.createGain();
+        osc.connect(gain);
+        gain.connect(ac.destination);
+        osc.frequency.value = 880;
+        osc.type = 'sine';
+        gain.gain.setValueAtTime(0.3, ac.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 0.4);
+        osc.start(ac.currentTime);
+        osc.stop(ac.currentTime + 0.4);
+      } catch (e) {}
+    }
+
+    // ── PAUSE / RESUME ─────────────────────────────────────────
+    function pauseResume() {
+      const btn = document.getElementById('pauseBtn');
+      if (isRunning) {
+        isRunning = false;
+        cancelAnimationFrame(animationId);
+        btn.textContent = '▶ RESUME';
+        showToast('Scan paused', 'info');
+      } else {
+        isRunning = true;
+        detectionLoop();
+        btn.textContent = '⏸ PAUSE';
+        showToast('Scan resumed', 'info');
+      }
+    }
+
+    // ── INIT ──────────────────────────────────────────────────
+    async function init() {
+      try {
+        await loadModels();
+        setLoadingText('STARTING WEBCAM...');
+        await startWebcam();
+        resizeOverlay();
+
+        const ok = await loadRegisteredUsers();
+        if (!ok) return;
+
+        showScanUI();
+        isRunning = true;
+        detectionLoop();
+        showToast('AI Recognition active!', 'success');
+      } catch (e) {
+        console.error('Init error:', e);
+        showToast('Initialization failed. Check console.', 'error');
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>
