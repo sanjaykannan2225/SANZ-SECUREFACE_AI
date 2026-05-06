@@ -683,104 +683,77 @@ body {
 /* =========================
    MOBILE RESPONSIVE
 ========================= */
+/* ================= MOBILE FINAL FIX ================= */
 
-@media (max-width: 768px) {
+@media screen and (max-width:768px){
 
-  body{
-    overflow-x:hidden;
+  .navbar{
+    padding:15px;
+    flex-wrap:wrap;
+    gap:15px;
   }
 
-  /* Navbar */
-  nav{
-    flex-direction: column;
-    gap: 15px;
-    padding: 15px;
+  .nav-brand{
+    width:100%;
+    justify-content:center;
   }
 
   .nav-links{
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
+    width:100%;
+    flex-direction:column;
+    background:rgba(2,8,16,0.98);
+    border:1px solid rgba(0,212,255,0.2);
+    border-radius:12px;
+    padding:15px;
+    gap:12px;
   }
 
-  /* Hero */
-  .hero{
-    padding: 40px 20px;
-    text-align: center;
+  .nav-links a{
+    width:100%;
+    text-align:center;
+    padding:12px;
   }
 
-  .hero h1{
-    font-size: 2rem;
-    line-height: 1.2;
+  .section-title{
+    font-size:2.5rem !important;
+    text-align:center;
+    line-height:1.2;
   }
 
   .hero p{
-    font-size: 0.95rem;
+    text-align:center;
+    font-size:1rem;
+    line-height:1.8;
   }
 
-  /* Buttons */
   .hero-buttons{
-    flex-direction: column;
-    gap: 15px;
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+    width:100%;
   }
 
-  .hero-buttons a{
-    width: 100%;
-    text-align: center;
+  .hero-buttons .btn{
+    width:100%;
+    justify-content:center;
   }
 
-  /* Video / Scan */
-  .video-container,
-  video,
-  canvas{
-    width: 100% !important;
-    height: auto !important;
+  .footer-grid{
+    grid-template-columns:1fr !important;
+    text-align:center;
   }
 
-  /* Dashboard */
   .dashboard-container{
-    flex-direction: column;
+    flex-direction:column;
   }
 
   .sidebar{
-    width: 100%;
-    height: auto;
+    width:100%;
   }
 
   .dashboard-main{
-    width: 100%;
-    padding: 15px;
-  }
-
-  /* Tables */
-  table{
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
-
-  /* Footer */
-  .footer-grid{
-    grid-template-columns: 1fr;
-    gap: 30px;
-    text-align: center;
-  }
-
-  /* About section */
-  .about-container{
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .about-image img{
-    width: 180px;
-    height: 180px;
-  }
-
-  /* Inputs */
-  input,
-  button{
-    width: 100%;
+    width:100%;
+    padding:15px;
   }
 
 }
