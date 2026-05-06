@@ -1,0 +1,14 @@
+{
+  "name": "sanz-secureface-ai",
+  "version": "1.0.0",
+  "description": "AI Face Recognition Attendance System",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "multer": "^1.4.5-lts.1"
+  }
+}
