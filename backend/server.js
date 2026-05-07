@@ -53,7 +53,9 @@ app.post('/api/register', upload.single('image'), (req, res) => {
       id: Date.now().toString(),
       name: name.trim(),
       image: `/uploads/${req.file.filename}`,
-      registeredAt: new Date().toISOString()
+registeredAt: new Date().toLocaleString('en-IN', {
+  timeZone: 'Asia/Kolkata'
+})
     };
 
     users.push(newUser);
@@ -103,9 +105,16 @@ app.post('/api/attendance', (req, res) => {
     if (!name) return res.status(400).json({ error: 'Name required' });
 
     const attendance = readAttendance();
-    const now = new Date();
-    const today = now.toISOString().split('T')[0];
-    const time = now.toTimeString().split(' ')[0];
+const now = new Date();
+
+const today = now.toLocaleDateString('en-CA', {
+  timeZone: 'Asia/Kolkata'
+});
+
+const time = now.toLocaleTimeString('en-IN', {
+  timeZone: 'Asia/Kolkata',
+  hour12: false
+});
 
     // Check if already marked today
     const alreadyMarked = attendance.find(a => a.name === name && a.date === today);
