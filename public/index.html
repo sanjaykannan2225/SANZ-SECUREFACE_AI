@@ -4,6 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sanz SecureFace AI — Next-Gen Attendance</title>
+  <link rel="manifest" href="manifest.json">
+
+<meta name="theme-color" content="#00d4ff">
   <link rel="stylesheet" href="css/style.css" />
 <style>
 
@@ -1288,6 +1291,17 @@ body.scrollTop = body.scrollHeight;
 
 </script>
 
+<script>
 
+if("serviceWorker" in navigator){
+
+navigator.serviceWorker
+.register("service-worker.js")
+
+.then(() => console.log("PWA Ready"));
+
+}
+
+</script>
 </body>
 </html>
