@@ -1,2 +1,3 @@
 User-agent: *
 Allow: /
+Sitemap: https://sanz-secureface-ai-xezk.onrender.com/sitemap.xml
