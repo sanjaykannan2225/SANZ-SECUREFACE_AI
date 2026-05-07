@@ -6,6 +6,9 @@
   <title>Dashboard — Sanz SecureFace AI</title>
   <link rel="stylesheet" href="css/style.css" />
   <style>
+    body{
+overflow-x:hidden;
+}
     .dashboard-layout {
       display: flex;
       min-height: 100vh;
@@ -270,25 +273,137 @@
     .date-filter:focus { border-color: var(--neon-blue); }
 
     /* ── MOBILE ───────────────────────────── */
-    @media (max-width: 800px) {
-      .dash-sidebar {
-        width: 100%;
-        height: auto;
-        position: relative;
-        top: 0;
-        border-right: none;
-        border-bottom: 1px solid rgba(0,212,255,0.1);
-        padding: 12px 0;
-        display: flex;
-        overflow-x: auto;
-        flex-direction: row;
-      }
-      .dash-nav-section { display: flex; gap: 4px; padding: 0 8px; margin: 0; }
-      .dash-nav-label { display: none; }
-      .dash-sep { display: none; }
-      .dash-main { margin-left: 0; max-width: 100%; padding: 16px; }
-      .dashboard-layout { flex-direction: column; }
-    }
+/* ───────── MOBILE RESPONSIVE ───────── */
+
+@media (max-width: 800px) {
+
+.dashboard-layout{
+flex-direction:column;
+padding-top:120px;
+}
+
+/* NAVBAR */
+
+.navbar{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+z-index:1000;
+background:#020617;
+padding:18px 20px;
+}
+
+.nav-clock{
+display:none;
+}
+
+/* SIDEBAR */
+
+.dash-sidebar{
+width:100%;
+height:auto;
+position:relative;
+top:0;
+left:0;
+border-right:none;
+border-bottom:1px solid rgba(0,212,255,0.1);
+padding:12px 0;
+display:flex;
+overflow-x:auto;
+flex-direction:row;
+z-index:1;
+}
+
+.dash-nav-section{
+display:flex;
+gap:4px;
+padding:0 8px;
+margin:0;
+}
+
+.dash-nav-label{
+display:none;
+}
+
+.dash-sep{
+display:none;
+}
+
+/* MAIN */
+
+.dash-main{
+margin-left:0;
+max-width:100%;
+padding:16px;
+}
+
+/* HEADER */
+
+.dash-header{
+flex-direction:column;
+align-items:flex-start;
+}
+
+/* STATS */
+
+.stat-cards{
+grid-template-columns:1fr 1fr;
+gap:15px;
+}
+
+/* TABLE */
+
+.table-wrapper{
+overflow-x:auto;
+}
+
+/* NAV MENU */
+
+.nav-links{
+position:fixed;
+top:80px;
+left:-100%;
+width:100%;
+background:#020617;
+flex-direction:column;
+padding:25px 0;
+transition:0.4s;
+z-index:999;
+}
+
+.nav-links.open{
+left:0;
+}
+
+.nav-burger{
+display:flex;
+flex-direction:column;
+gap:5px;
+background:none;
+border:none;
+cursor:pointer;
+}
+
+.nav-burger span{
+width:24px;
+height:2px;
+background:#00d4ff;
+border-radius:5px;
+}
+
+/* LOGO */
+
+.nav-logo{
+width:40px;
+height:40px;
+}
+
+.nav-brand-text{
+font-size:18px;
+}
+
+}
     /* NAVBAR LOGO */
 
 .nav-logo{
