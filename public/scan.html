@@ -359,6 +359,73 @@ font-size:18px;
 }
 
 }
+/* SECURITY ALERT */
+
+.security-alert{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.85);
+display:none;
+justify-content:center;
+align-items:center;
+z-index:99999;
+backdrop-filter:blur(10px);
+animation: alertFade 0.4s ease;
+}
+
+.alert-box{
+width:90%;
+max-width:420px;
+background:#120000;
+border:2px solid #ff0033;
+padding:40px 30px;
+border-radius:20px;
+text-align:center;
+box-shadow:0 0 40px rgba(255,0,51,0.5);
+animation:pulseAlert 1s infinite;
+}
+
+.alert-icon{
+font-size:70px;
+margin-bottom:20px;
+}
+
+.alert-box h2{
+color:#ff3355;
+font-size:28px;
+margin-bottom:15px;
+}
+
+.alert-box p{
+color:#ffb3bd;
+margin-bottom:25px;
+font-size:16px;
+}
+
+.alert-box button{
+padding:14px 28px;
+background:#ff0033;
+border:none;
+border-radius:12px;
+color:white;
+font-size:15px;
+font-weight:bold;
+cursor:pointer;
+}
+
+@keyframes pulseAlert{
+0%{transform:scale(1);}
+50%{transform:scale(1.03);}
+100%{transform:scale(1);}
+}
+
+@keyframes alertFade{
+from{opacity:0;}
+to{opacity:1;}
+}
   </style>
 </head>
 
@@ -493,6 +560,7 @@ SANZ <span>SECUREFACE</span> AI
     let animationId = null;
     let markedToday = new Set();
     let lastFps = 0;
+    let unknownAlertShown = false;
     let frameCount = 0;
     let lastFpsTime = Date.now();
     const API = '';
@@ -699,15 +767,27 @@ async function loadModels() {
                 boxColor = '#00ff88';
                 if (!markedToday.has(match.label)) markAttendance(match.label, 'Exact Match');
               } else if (dist < 0.7) {
-                matchType = 'approx';
-                label = '⚠ APPROX MATCH';
-                name = match.label;
-                sub = `Confidence: ${((1 - dist) * 100).toFixed(1)}%`;
-                boxColor = '#ffaa00';
-                if (!markedToday.has(match.label)) markAttendance(match.label, 'Approx Match');
-              } else {
-                sub = `Best: ${match.label} (${(dist).toFixed(2)})`;
-              }
+    matchType = 'approx';
+    label = '⚠ APPROX MATCH';
+    name = match.label;
+    sub = `Confidence: ${((1 - dist) * 100).toFixed(1)}%`;
+    boxColor = '#ffaa00';
+
+} else {
+
+    sub = `Best: ${match.label} (${(dist).toFixed(2)})`;
+
+    if(!unknownAlertShown){
+
+        showSecurityAlert();
+        unknownAlertShown = true;
+
+        setTimeout(() => {
+            unknownAlertShown = false;
+        }, 5000);
+
+    }
+}
             }
 
             if (i === 0) setResult(matchType, label, name, sub);
@@ -858,6 +938,66 @@ function logout(){
 localStorage.removeItem("loggedIn");
 
 window.location.href = "login.html";
+
+}
+
+</script>
+
+<!-- SECURITY ALERT -->
+<div id="securityAlert" class="security-alert">
+
+<div class="alert-box">
+
+<div class="alert-icon">🚨</div>
+
+<h2>UNKNOWN PERSON DETECTED</h2>
+
+<p>Security has been notified</p>
+
+<button onclick="closeAlert()">
+CLOSE ALERT
+</button>
+
+</div>
+
+</div>
+
+<script>
+
+function speak(text){
+
+const speech = new SpeechSynthesisUtterance(text);
+
+speech.lang = "en-US";
+speech.rate = 1;
+speech.pitch = 1;
+speech.volume = 1;
+
+window.speechSynthesis.speak(speech);
+
+}
+
+</script>
+
+<script>
+
+function showSecurityAlert(){
+
+document.getElementById("securityAlert").style.display = "flex";
+
+speak("Warning. Unknown person detected.");
+
+const alarm = new Audio(
+"https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg"
+);
+
+alarm.play();
+
+}
+
+function closeAlert(){
+
+document.getElementById("securityAlert").style.display = "none";
 
 }
 

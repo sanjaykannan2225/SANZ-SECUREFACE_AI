@@ -383,6 +383,11 @@ gap:5px;
 background:none;
 border:none;
 cursor:pointer;
+
+position:relative;
+z-index:10001;
+
+margin-left:auto;
 }
 
 .nav-burger span{
@@ -404,6 +409,39 @@ font-size:18px;
 }
 
 }
+
+/* EXPORT BUTTONS */
+
+.export-buttons{
+display:flex;
+gap:15px;
+flex-wrap:wrap;
+margin-top:20px;
+}
+
+.export-buttons button{
+padding:14px 20px;
+border:none;
+border-radius:12px;
+
+background:rgba(0,212,255,0.08);
+border:1px solid rgba(0,212,255,0.2);
+
+color:#00d4ff;
+font-weight:700;
+letter-spacing:1px;
+
+cursor:pointer;
+transition:0.3s ease;
+}
+
+.export-buttons button:hover{
+transform:translateY(-3px);
+box-shadow:0 0 20px rgba(0,212,255,0.35);
+background:#00d4ff;
+color:black;
+}
+
     /* NAVBAR LOGO */
 
 .nav-logo{
@@ -531,6 +569,21 @@ SANZ <span>SECUREFACE</span> AI
             SYSTEM ONLINE
           </div>
           <button class="btn btn-secondary btn-sm" onclick="refreshAll()">↻ REFRESH</button>
+          <div class="export-buttons">
+
+<button onclick="downloadPDF()">
+📄 DOWNLOAD PDF
+</button>
+
+<button onclick="downloadExcel()">
+📊 EXPORT EXCEL
+</button>
+
+<button onclick="monthlyReport()">
+📈 MONTHLY REPORT
+</button>
+
+</div>
         </div>
       </div>
 
@@ -883,6 +936,69 @@ async function clearAttendance() {
     loadDashboard();
     loadAttendance();
   </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<script>
+
+async function downloadPDF(){
+
+const { jsPDF } = window.jspdf;
+
+const doc = new jsPDF();
+
+doc.setFontSize(20);
+doc.text("SANZ SECUREFACE AI", 20, 20);
+
+doc.setFontSize(12);
+doc.text("Attendance Report", 20, 40);
+
+doc.text(
+"Generated: " + new Date().toLocaleString(),
+20,
+55
+);
+
+doc.save("attendance-report.pdf");
+
+}
+
+function downloadExcel(){
+
+const data = [
+["Name","Date","Status"],
+
+["Sanjay",
+new Date().toLocaleDateString(),
+"Present"]
+];
+
+const ws = XLSX.utils.aoa_to_sheet(data);
+
+const wb = XLSX.utils.book_new();
+
+XLSX.utils.book_append_sheet(
+wb,
+ws,
+"Attendance"
+);
+
+XLSX.writeFile(
+wb,
+"attendance.xlsx"
+);
+
+}
+
+function monthlyReport(){
+
+alert("📈 Monthly analytics coming soon!");
+
+}
+
+</script>
 
   <script>
 

@@ -502,19 +502,27 @@ align-items:center;
 
 /* NAVBAR */
 .navbar{
-padding:18px 20px;
-display:flex;
-justify-content:space-between;
-align-items:center;
 position:fixed;
 top:0;
 left:0;
 width:100%;
-z-index:1000;
-background:#020617;
-border-bottom:1px solid rgba(0,212,255,0.1);
-}
+padding:16px 40px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+z-index:10000;
+gap:15px;
+background:rgba(2,6,23,0.75);
+backdrop-filter:blur(18px);
 
+border-bottom:1px solid rgba(0,212,255,0.12);
+
+box-shadow:
+0 0 25px rgba(0,212,255,0.08),
+0 10px 30px rgba(0,0,0,0.35);
+
+transition:0.3s ease;
+}
 .nav-brand-text{
 font-size:18px;
 }
@@ -538,10 +546,46 @@ display:flex;
 transition:0.4s ease;
 border-top:1px solid rgba(0,212,255,0.1);
 z-index:999;
-
+gap:30px;
 height:0;
 overflow:hidden;
 opacity:0;
+}
+.nav-links a{
+position:relative;
+color:white;
+font-weight:600;
+text-decoration:none;
+transition:0.3s ease;
+padding:8px 0;
+font-size:15px;
+letter-spacing:1px;
+}
+
+.nav-links a:hover{
+color:#00d4ff;
+text-shadow:0 0 12px rgba(0,212,255,0.7);
+}
+
+.nav-links a::after{
+content:'';
+position:absolute;
+left:0;
+bottom:-4px;
+width:0%;
+height:2px;
+background:#00d4ff;
+transition:0.3s ease;
+box-shadow:0 0 10px #00d4ff;
+}
+
+.nav-links a:hover::after,
+.nav-links a.active::after{
+width:100%;
+}
+
+.nav-links a.active{
+color:#00d4ff;
 }
 
 .nav-links.open{
@@ -553,6 +597,16 @@ pointer-events:auto;
 }
 .nav-burger{
 display:flex;
+flex-direction:column;
+gap:5px;
+background:none;
+border:none;
+cursor:pointer;
+
+position:relative;
+z-index:10001;
+
+margin-left:auto;
 }
 
 .nav-clock{
@@ -640,6 +694,105 @@ height:auto;
 }
 
 }
+
+/* AI CHATBOT */
+
+.ai-chatbot{
+position:fixed;
+bottom:25px;
+right:25px;
+z-index:99999;
+}
+
+.chatbot-btn{
+width:65px;
+height:65px;
+border-radius:50%;
+background:#00d4ff;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:30px;
+cursor:pointer;
+box-shadow:0 0 25px rgba(0,212,255,0.6);
+animation:pulseBot 2s infinite;
+}
+
+.chatbot-box{
+position:absolute;
+bottom:80px;
+right:0;
+width:320px;
+background:#06111f;
+border:1px solid rgba(0,212,255,0.3);
+border-radius:20px;
+padding:20px;
+display:none;
+box-shadow:0 0 30px rgba(0,212,255,0.2);
+}
+
+.chatbot-box.show{
+display:block;
+animation:botOpen 0.3s ease;
+}
+
+.chatbot-header{
+color:#00d4ff;
+font-weight:bold;
+margin-bottom:15px;
+font-size:18px;
+}
+
+.chatbot-body{
+max-height:220px;
+overflow-y:auto;
+display:flex;
+flex-direction:column;
+gap:10px;
+}
+
+.bot-msg{
+background:rgba(0,212,255,0.08);
+padding:12px;
+border-radius:12px;
+color:white;
+font-size:14px;
+line-height:1.5;
+}
+
+.chatbot-options{
+display:flex;
+gap:10px;
+margin-top:15px;
+flex-wrap:wrap;
+}
+
+.chatbot-options button{
+padding:10px 14px;
+border:none;
+border-radius:10px;
+background:#00d4ff;
+color:black;
+font-weight:bold;
+cursor:pointer;
+}
+
+@keyframes pulseBot{
+0%{transform:scale(1);}
+50%{transform:scale(1.08);}
+100%{transform:scale(1);}
+}
+
+@keyframes botOpen{
+from{
+opacity:0;
+transform:translateY(20px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
   </style>
 </head>
 <body>
@@ -721,15 +874,24 @@ SANZ <span>SECUREFACE</span> AI
         </p>
 
         <div class="hero-buttons">
-          <a href="scan.html" class="btn btn-primary">
+          <a href="scan.html"
+           class="btn btn-primary"
+           onclick="speak('Starting face scan')">
             ⬡ START SCANNING
           </a>
-          <a href="register.html" class="btn btn-secondary">
-            + REGISTER FACE
-          </a>
-          <a href="dashboard.html" class="btn btn-purple">
-            ▣ DASHBOARD
-          </a>
+         <a href="register.html"
+class="btn btn-secondary"
+onclick="speak('Opening face registration')">
+    + REGISTER FACE
+</a>
+
+<a href="dashboard.html"
+class="btn btn-purple"
+onclick="speak('Opening dashboard')">
+
+    ▣ DASHBOARD
+
+</a>
         </div>
 
         <div class="hero-stats">
@@ -922,6 +1084,8 @@ SANZ <span>SECUREFACE</span> AI
   </div>
 </footer>
 
+
+
   <script>
     // Loading screen
     window.addEventListener('load', () => {
@@ -1018,5 +1182,112 @@ window.location.href = "login.html";
 }
 
 </script>
+
+<script>
+function speak(text) {
+    const speech = new SpeechSynthesisUtterance(text);
+
+    speech.lang = "en-US";
+    speech.rate = 1;
+    speech.pitch = 1;
+    speech.volume = 1;
+
+    const voices = window.speechSynthesis.getVoices();
+
+    if (voices.length > 1) {
+        speech.voice = voices[1];
+    }
+
+    window.speechSynthesis.speak(speech);
+}
+
+window.addEventListener("load", () => {
+    setTimeout(() => {
+        speak("Welcome to SANZ SecureFace AI");
+    }, 1000);
+});
+</script>
+<!-- AI CHATBOT -->
+
+<div class="ai-chatbot">
+
+<div class="chatbot-btn" onclick="toggleChatbot()">
+🤖
+</div>
+
+<div class="chatbot-box" id="chatbotBox">
+
+<div class="chatbot-header">
+SANZ AI ASSISTANT
+</div>
+
+<div class="chatbot-body" id="chatBody">
+
+<div class="bot-msg">
+⚡ AI Assistant Activated <br>
+System ready for commands.
+</div>
+
+</div>
+
+<div class="chatbot-options">
+
+<button onclick="botReply('scan')">
+Live Scan
+</button>
+
+<button onclick="botReply('register')">
+Register
+</button>
+
+<button onclick="botReply('dashboard')">
+Dashboard
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+function toggleChatbot(){
+
+document
+.getElementById("chatbotBox")
+.classList.toggle("show");
+
+}
+
+function botReply(type){
+
+const body = document.getElementById("chatBody");
+
+let msg = "";
+
+if(type === "scan"){
+msg = "📷 Live Scan helps detect faces in real time.";
+}
+
+if(type === "register"){
+msg = "🧠 Register section stores AI face embeddings.";
+}
+
+if(type === "dashboard"){
+msg = "📊 Dashboard shows attendance analytics.";
+}
+
+body.innerHTML += `
+<div class="bot-msg">${msg}</div>
+`;
+
+body.scrollTop = body.scrollHeight;
+
+}
+
+</script>
+
+
 </body>
 </html>

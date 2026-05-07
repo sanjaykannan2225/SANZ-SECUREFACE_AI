@@ -470,7 +470,10 @@ SANZ <span>SECUREFACE</span> AI
             </div>
 
             <!-- Submit -->
-            <button type="submit" class="btn btn-primary w-full" id="submitBtn"
+            <button type="submit"
+            class="btn btn-primary w-full"
+             id="submitBtn"
+            onclick="speak('Registering face data')"
               style="justify-content: center; font-size: 0.85rem;">
               🆔 REGISTER FACE
             </button>
@@ -553,6 +556,7 @@ SANZ <span>SECUREFACE</span> AI
           setTimeout(() => {
             document.getElementById('successName').textContent = `"${data.user.name}" has been registered successfully.`;
             document.getElementById('successPopup').classList.add('show');
+            speak("Face registered successfully");
             loadRegisteredUsers();
           }, 400);
         } else {
@@ -645,6 +649,21 @@ window.location.href = "login.html";
 
 }
 
+</script>
+
+<script>
+function speak(text) {
+
+const speech = new SpeechSynthesisUtterance(text);
+
+speech.lang = "en-US";
+speech.rate = 1;
+speech.pitch = 1;
+speech.volume = 1;
+
+window.speechSynthesis.speak(speech);
+
+}
 </script>
 </body>
 </html>
