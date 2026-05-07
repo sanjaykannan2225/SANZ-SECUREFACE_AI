@@ -300,6 +300,132 @@
       }
 
     }
+    /* NAVBAR LOGO */
+
+.nav-logo{
+width:52px;
+height:52px;
+object-fit:contain;
+filter:drop-shadow(0 0 12px rgba(0,212,255,0.7));
+}
+
+.nav-brand{
+display:flex;
+align-items:center;
+gap:12px;
+text-decoration:none;
+}
+
+.nav-brand-text{
+font-size:24px;
+font-weight:bold;
+color:white;
+}
+
+.nav-brand-text span{
+color:#00d4ff;
+}
+/* NAVBAR */
+
+.navbar{
+width:100%;
+padding:18px 6%;
+display:flex;
+justify-content:space-between;
+align-items:center;
+border-bottom:1px solid rgba(0,217,255,0.1);
+backdrop-filter:blur(12px);
+position:sticky;
+top:0;
+z-index:1000;
+background:rgba(3,7,18,0.85);
+}
+
+.nav-brand{
+display:flex;
+align-items:center;
+gap:14px;
+text-decoration:none;
+}
+
+.nav-logo{
+width:52px;
+height:52px;
+object-fit:contain;
+filter:drop-shadow(0 0 12px rgba(0,217,255,0.7));
+}
+
+.nav-brand-text{
+font-size:24px;
+font-family:'Orbitron',sans-serif;
+font-weight:800;
+color:white;
+letter-spacing:1px;
+}
+
+.nav-brand-text span{
+color:#00d9ff;
+text-shadow:0 0 15px #00d9ff;
+}
+
+.nav-links{
+display:flex;
+align-items:center;
+gap:28px;
+}
+
+.nav-links a{
+color:#9ca3af;
+text-decoration:none;
+font-weight:700;
+letter-spacing:1px;
+transition:0.3s;
+font-size:15px;
+}
+
+.nav-links a:hover{
+color:#00d9ff;
+text-shadow:0 0 12px #00d9ff;
+}
+
+/* MOBILE */
+@media(max-width:900px){
+
+.about-container{
+flex-direction:column;
+}
+
+.title{
+font-size:42px;
+}
+
+.profile-box{
+width:100%;
+max-width:350px;
+}
+
+.navbar{
+flex-direction:column;
+gap:20px;
+padding:20px;
+}
+
+.nav-links{
+flex-wrap:wrap;
+justify-content:center;
+gap:15px;
+}
+
+.nav-brand-text{
+font-size:18px;
+}
+
+.nav-logo{
+width:42px;
+height:42px;
+}
+
+}
 
   </style>
 </head>
@@ -320,23 +446,37 @@ window.location.href = "login.html";
   <div class="glow"></div>
 
   <!-- NAVBAR -->
+<!-- NAVBAR -->
 
-  <nav class="navbar">
+<nav class="navbar">
 
-    <div class="logo">
-      SANZ <span>SECUREFACE AI</span>
-    </div>
+<a href="index.html" class="nav-brand">
 
-    <div class="nav-links">
-      <a href="index.html">HOME</a>
-      <a href="scan.html">SCAN</a>
-      <a href="register.html">REGISTER</a>
-      <a href="dashboard.html">DASHBOARD</a>
-            <li><a href="#" onclick="logout()">Logout</a></li>
+<img src="uploads/logo (2).png" class="nav-logo">
 
-    </div>
+<div class="nav-brand-text">
+SANZ <span>SECUREFACE</span> AI
+</div>
 
-  </nav>
+</a>
+
+<div class="nav-links">
+
+<a href="index.html">HOME</a>
+
+<a href="scan.html">LIVE SCAN</a>
+
+<a href="register.html">REGISTER</a>
+
+<a href="dashboard.html">DASHBOARD</a>
+
+<a href="about.html" style="color:#00d9ff;">ABOUT</a>
+
+<a href="#" onclick="logout()">LOGOUT</a>
+
+</div>
+
+</nav>
 
   <!-- ABOUT SECTION -->
 

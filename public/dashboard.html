@@ -289,6 +289,46 @@
       .dash-main { margin-left: 0; max-width: 100%; padding: 16px; }
       .dashboard-layout { flex-direction: column; }
     }
+    /* NAVBAR LOGO */
+
+.nav-logo{
+width:52px;
+height:52px;
+object-fit:contain;
+filter:drop-shadow(0 0 12px rgba(0,212,255,0.7));
+}
+
+.nav-brand{
+display:flex;
+align-items:center;
+gap:12px;
+text-decoration:none;
+}
+
+.nav-brand-text{
+font-size:24px;
+font-weight:bold;
+color:white;
+}
+
+.nav-brand-text span{
+color:#00d4ff;
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+.nav-logo{
+width:40px;
+height:40px;
+}
+
+.nav-brand-text{
+font-size:18px;
+}
+
+}
   </style>
 </head>
 <body>
@@ -310,12 +350,15 @@ window.location.href = "login.html";
 
   <!-- Navbar -->
   <nav class="navbar">
-    <a href="index.html" class="nav-brand">
-      <div class="nav-logo-icon">
-        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
-      </div>
-      <div class="nav-brand-text">SANZ <span>SECUREFACE</span> AI</div>
-    </a>
+<a href="index.html" class="nav-brand">
+
+<img src="uploads/logo (2).png" class="nav-logo">
+
+<div class="nav-brand-text">
+SANZ <span>SECUREFACE</span> AI
+</div>
+
+</a>
     <button class="nav-burger" onclick="toggleNav()"><span></span><span></span><span></span></button>
     <ul class="nav-links" id="navLinks">
       <li><a href="index.html">Home</a></li>
