@@ -306,6 +306,16 @@
 
 <body>
 
+  <script>
+
+if(localStorage.getItem("loggedIn") !== "true"){
+
+window.location.href = "login.html";
+
+}
+
+</script>
+
   <div class="bg-grid"></div>
   <div class="glow"></div>
 
@@ -322,6 +332,8 @@
       <a href="scan.html">SCAN</a>
       <a href="register.html">REGISTER</a>
       <a href="dashboard.html">DASHBOARD</a>
+            <li><a href="#" onclick="logout()">Logout</a></li>
+
     </div>
 
   </nav>
@@ -411,6 +423,18 @@
   <div class="footer">
     © 2026 SANZ SECUREFACE AI • Developed By Sanjay
   </div>
+
+  <script>
+
+function logout(){
+
+localStorage.removeItem("loggedIn");
+
+window.location.href = "login.html";
+
+}
+
+</script>
 
 </body>
 </html>

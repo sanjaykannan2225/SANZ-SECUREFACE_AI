@@ -390,6 +390,15 @@
   </style>
 </head>
 <body>
+
+<script>
+if(localStorage.getItem("loggedIn") !== "true")
+{
+window.location.href = "login.html";
+}
+</script>
+
+
   <!-- Background -->
   <div class="bg-grid"></div>
   <div class="bg-glow"></div>
@@ -424,6 +433,8 @@
       <li><a href="register.html">Register</a></li>
       <li><a href="dashboard.html">Dashboard</a></li>
       <li><a href="about.html">ABOUT</a></li>
+            <li><a href="#" onclick="logout()">Logout</a></li>
+
     </ul>
 
     <div class="nav-clock" id="navClock">--:--:--</div>
@@ -736,5 +747,17 @@
     drawParticles();
     loadStats();
   </script>
+
+  <script>
+
+function logout(){
+
+localStorage.removeItem("loggedIn");
+
+window.location.href = "login.html";
+
+}
+
+</script>
 </body>
 </html>

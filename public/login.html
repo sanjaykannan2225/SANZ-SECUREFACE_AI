@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Secure Login — SANZ SECUREFACE AI</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial;
+}
+
+body{
+background:#020617;
+color:white;
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:flex-start;
+overflow-y:auto;
+overflow-x:hidden;
+padding:40px 20px;
+position:relative;
+}
+/* GRID BACKGROUND */
+
+body::before{
+content:'';
+position:absolute;
+width:100%;
+height:100%;
+background:
+linear-gradient(rgba(0,212,255,0.08) 1px, transparent 1px),
+linear-gradient(90deg, rgba(0,212,255,0.08) 1px, transparent 1px);
+background-size:40px 40px;
+z-index:-2;
+}
+
+/* GLOW EFFECT */
+
+body::after{
+content:'';
+position:absolute;
+width:500px;
+height:500px;
+background:radial-gradient(circle, rgba(0,212,255,0.15), transparent 70%);
+top:-100px;
+right:-100px;
+z-index:-1;
+}
+
+/* MAIN CONTAINER */
+
+.container{
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+gap:60px;
+width:100%;
+padding-bottom:40px;
+}
+/* ── AI FACE VISUAL ───────────────────── */
+
+.hero-visual {
+display:flex;
+align-items:center;
+justify-content:center;
+position:relative;
+}
+
+.face-scanner {
+position:relative;
+width:320px;
+height:320px;
+}
+
+/* RINGS */
+
+.scanner-ring {
+position:absolute;
+border-radius:50%;
+border:1px solid;
+animation:ringPulse 3s ease infinite;
+}
+
+.scanner-ring:nth-child(1) {
+inset:0;
+border-color:rgba(0,212,255,0.4);
+animation-delay:0s;
+}
+
+.scanner-ring:nth-child(2) {
+inset:20px;
+border-color:rgba(0,212,255,0.3);
+animation-delay:0.5s;
+}
+
+.scanner-ring:nth-child(3) {
+inset:40px;
+border-color:rgba(180,0,255,0.3);
+animation-delay:1s;
+}
+
+@keyframes ringPulse {
+0%,100%{
+opacity:0.3;
+transform:scale(1);
+}
+50%{
+opacity:1;
+transform:scale(1.03);
+}
+}
+
+/* FACE AREA */
+
+.scanner-face-area{
+position:absolute;
+inset:60px;
+border-radius:50%;
+background:radial-gradient(circle, rgba(0,212,255,0.08) 0%, transparent 70%);
+display:flex;
+align-items:center;
+justify-content:center;
+}
+
+/* FACE ICON */
+
+.face-icon{
+font-size:5rem;
+animation:faceFloat 4s ease infinite;
+filter:drop-shadow(0 0 20px rgba(0,212,255,0.7));
+}
+
+@keyframes faceFloat{
+0%,100%{
+transform:translateY(0);
+}
+50%{
+transform:translateY(-10px);
+}
+}
+
+/* SCAN LINE */
+
+.scan-line{
+position:absolute;
+left:50%;
+top:40px;
+transform:translateX(-50%);
+width:220px;
+height:2px;
+background:linear-gradient(
+90deg,
+transparent,
+#00d4ff,
+transparent
+);
+box-shadow:0 0 20px #00d4ff;
+animation:scanMove 3s linear infinite;
+}
+
+@keyframes scanMove{
+0%{
+top:40px;
+opacity:0;
+}
+10%{
+opacity:1;
+}
+50%{
+opacity:1;
+}
+100%{
+top:260px;
+opacity:0;
+}
+}
+
+/* BRACKETS */
+
+.scan-bracket{
+position:absolute;
+width:35px;
+height:35px;
+border:3px solid #00d4ff;
+}
+
+.scan-bracket.tl{
+top:40px;
+left:40px;
+border-right:none;
+border-bottom:none;
+}
+
+.scan-bracket.tr{
+top:40px;
+right:40px;
+border-left:none;
+border-bottom:none;
+}
+
+.scan-bracket.bl{
+bottom:40px;
+left:40px;
+border-right:none;
+border-top:none;
+}
+
+.scan-bracket.br{
+bottom:40px;
+right:40px;
+border-left:none;
+border-top:none;
+}
+
+/* DATA */
+
+.scanner-data{
+position:absolute;
+right:-90px;
+top:50%;
+transform:translateY(-50%);
+display:flex;
+flex-direction:column;
+gap:12px;
+font-size:0.8rem;
+color:#00d4ff;
+font-family:monospace;
+}
+
+.data-item{
+margin:3px 0;
+letter-spacing:1px;
+}
+
+/* LOGIN BOX */
+
+.login-box{
+width:100%;
+max-width:420px;
+padding:40px;
+border:1px solid rgba(0,212,255,0.3);
+background:rgba(0,0,0,0.5);
+backdrop-filter:blur(10px);
+border-radius:20px;
+box-shadow:0 0 30px rgba(0,212,255,0.2);
+}
+
+/* LOGO */
+
+.logo{
+font-size:32px;
+font-weight:bold;
+text-align:center;
+margin-bottom:10px;
+}
+
+.logo span{
+color:#00d4ff;
+}
+
+.subtitle{
+text-align:center;
+color:#aaa;
+margin-bottom:30px;
+}
+
+/* INPUTS */
+
+.input-box{
+margin-bottom:20px;
+}
+
+.input-box input{
+width:100%;
+padding:15px;
+background:#07111f;
+border:1px solid rgba(0,212,255,0.3);
+border-radius:12px;
+color:white;
+font-size:16px;
+outline:none;
+transition:0.3s;
+}
+
+.input-box input:focus{
+border-color:#00d4ff;
+box-shadow:0 0 15px rgba(0,212,255,0.3);
+}
+
+/* BUTTON */
+
+.login-btn{
+width:100%;
+padding:15px;
+border:none;
+border-radius:12px;
+background:linear-gradient(90deg,#00d4ff,#6a00ff);
+color:white;
+font-size:16px;
+font-weight:bold;
+cursor:pointer;
+transition:0.3s;
+}
+
+.login-btn:hover{
+transform:scale(1.03);
+box-shadow:0 0 20px rgba(0,212,255,0.4);
+}
+
+/* FOOTER */
+
+.footer{
+margin-top:30px;
+text-align:center;
+}
+
+.footer-line{
+width:100%;
+height:1px;
+background:rgba(0,212,255,0.2);
+margin-bottom:20px;
+}
+
+.footer-brand{
+font-size:16px;
+font-weight:bold;
+color:#00d4ff;
+margin-bottom:8px;
+letter-spacing:2px;
+}
+
+.footer-desc{
+font-size:13px;
+color:#888;
+margin-bottom:10px;
+line-height:1.5;
+}
+
+.footer-status{
+font-size:13px;
+color:#00ff88;
+margin-bottom:15px;
+}
+
+.footer-socials{
+display:flex;
+justify-content:center;
+gap:15px;
+margin-bottom:15px;
+flex-wrap:wrap;
+}
+
+.footer-socials a{
+text-decoration:none;
+color:#00d4ff;
+font-size:13px;
+transition:0.3s;
+}
+
+.footer-socials a:hover{
+color:#6a00ff;
+}
+
+.footer-copy{
+font-size:12px;
+color:#666;
+}
+
+/* ERROR */
+
+.error{
+margin-top:15px;
+text-align:center;
+color:red;
+display:none;
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+.face-scanner{
+width:260px;
+height:260px;
+}
+
+.face-icon{
+font-size:4rem;
+}
+
+.login-box{
+padding:30px 20px;
+}
+
+.logo{
+font-size:26px;
+}
+
+}
+@media(max-width:768px){
+
+.face-scanner{
+width:260px;
+height:260px;
+}
+
+.face-icon{
+font-size:4rem;
+}
+
+.scanner-data{
+position:absolute;
+bottom:-70px;
+left:50%;
+right:auto;
+top:auto;
+transform:translateX(-50%);
+align-items:center;
+}
+
+.login-box{
+padding:30px 20px;
+margin-top:30px;
+}
+
+.logo{
+font-size:26px;
+}
+
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- AI FACE SCANNER -->
+
+<div class="hero-visual">
+
+<div class="face-scanner">
+
+<div class="scanner-ring"></div>
+<div class="scanner-ring"></div>
+<div class="scanner-ring"></div>
+
+<div class="scan-bracket tl"></div>
+<div class="scan-bracket tr"></div>
+<div class="scan-bracket bl"></div>
+<div class="scan-bracket br"></div>
+
+<div class="scan-line"></div>
+
+<div class="scanner-face-area">
+<div class="face-icon">🤖</div>
+</div>
+
+<div class="scanner-data">
+<div class="data-item">FACE_ID: 0xA3F2</div>
+<div class="data-item">CONF: 99.7%</div>
+<div class="data-item">MATCH: ✅</div>
+</div>
+
+</div>
+
+</div>
+
+<!-- LOGIN BOX -->
+
+<div class="login-box">
+
+<div class="logo">
+SANZ <span>SECUREFACE AI</span>
+</div>
+
+<div class="subtitle">
+Secure AI Attendance Login
+</div>
+
+<div class="input-box">
+<input type="text" id="username" placeholder="Username">
+</div>
+
+<div class="input-box">
+<input type="password" id="password" placeholder="Password">
+</div>
+
+<button class="login-btn" onclick="login()">
+LOGIN
+</button>
+
+<div class="error" id="error">
+Invalid Username or Password
+</div>
+
+<div class="footer">
+
+<div class="footer-line"></div>
+
+<div class="footer-brand">
+SANZ SECUREFACE AI
+</div>
+
+<div class="footer-desc">
+AI-powered biometric attendance & security platform
+</div>
+
+<div class="footer-status">
+🟢 Secure Server Connected
+</div>
+
+<div class="footer-socials">
+
+<a href="https://github.com/sanjaykannan2225" target="_blank">
+GitHub
+</a>
+
+<a href="https://www.linkedin.com/in/sanjayk017/" target="_blank">
+LinkedIn
+</a>
+
+</div>
+
+<div class="footer-copy">
+© 2026 Developed by Sanjay
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+function login(){
+
+const username = document.getElementById('username').value;
+const password = document.getElementById('password').value;
+
+if(username === "Admin" && password === "sanzfaceai@2026"){
+
+localStorage.setItem("loggedIn","true");
+
+window.location.href = "index.html";
+
+}else{
+
+document.getElementById('error').style.display = "block";
+
+}
+
+}
+
+</script>
+
+</body>
+</html>

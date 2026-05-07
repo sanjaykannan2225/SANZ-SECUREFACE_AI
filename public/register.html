@@ -299,6 +299,15 @@
   </style>
 </head>
 <body>
+
+  <script>
+if(localStorage.getItem("loggedIn") !== "true")
+{
+window.location.href = "login.html";
+}
+</script>
+
+
   <div class="bg-grid"></div>
   <div class="bg-glow"></div>
   <canvas id="particles-canvas"></canvas>
@@ -333,6 +342,8 @@
       <li><a href="scan.html">Live Scan</a></li>
       <li><a href="register.html" class="active">Register</a></li>
       <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="#" onclick="logout()">Logout</a></li>
+
     </ul>
     <div class="nav-clock" id="navClock">--:--:--</div>
   </nav>
@@ -593,5 +604,17 @@
 
     loadRegisteredUsers();
   </script>
+
+  <script>
+
+function logout(){
+
+localStorage.removeItem("loggedIn");
+
+window.location.href = "login.html";
+
+}
+
+</script>
 </body>
 </html>
