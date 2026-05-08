@@ -282,8 +282,13 @@ app.get('/api/attendance', requireAuth(), (req, res) => {
 app.post('/api/attendance', (req, res) => {
   const { userId, name, confidence, method } = req.body;
   const records = DB.read(DB.ATTENDANCE);
-  const today = new Date().toISOString().split('T')[0];
-  const now = new Date().toLocaleTimeString('en-IN', { hour12: false });
+ const today = new Date().toLocaleDateString('en-CA', {
+  timeZone: 'Asia/Kolkata'
+});
+const now = new Date().toLocaleTimeString('en-IN', {
+  timeZone: 'Asia/Kolkata',
+  hour12: false
+});
 
   // Prevent duplicate attendance same day
   const existing = records.find(r => r.userId === userId && r.date === today);
