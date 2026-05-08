@@ -604,12 +604,6 @@ left:0;
 </head>
 
 <body>
-    <script>
-if(localStorage.getItem("loggedIn") !== "true")
-{
-window.location.href = "login.html";
-}
-</script>
 
 <div class="bg-grid"></div>
 <div class="bg-glow"></div>
@@ -638,13 +632,9 @@ SANZ <span>SECUREFACE</span> AI
 <ul class="nav-links">
 
 <li><a href="index.html">HOME</a></li>
-<li><a href="scan.html">LIVE SCAN</a></li>
-<li><a href="register.html">REGISTER</a></li>
-<li><a href="dashboard.html">DASHBOARD</a></li>
 <li><a href="about.html">ABOUT</a></li>
 <li><a href="features.html">FEATURES</a></li>
 <li><a href="user-guide.html" class="active">USER GUIDE</a></li>
-<li><a href="#" onclick="logout()">Logout</a></li>
 
 </ul>
 
@@ -652,24 +642,27 @@ SANZ <span>SECUREFACE</span> AI
 
 <!-- HERO -->
 
+
 <section class="hero">
 
 <div class="hero-tag">
-AI SYSTEM USER GUIDE
+HOW TO USE SANZ AI SYSTEM
 </div>
 
 <h1>
-Learn How To Use<br>
-<span>SANZ SecureFace AI</span>
+Complete <span>User Guide</span><br>
+For Beginners
 </h1>
 
 <p>
-Complete step-by-step guide to register faces, start AI scanning,
-verify users, and manage smart attendance using futuristic AI technology.
+Learn how to login, register users, start AI live scanning,
+mark attendance, and manage the dashboard using
+SANZ SecureFace AI system step-by-step.
 </p>
 
 </section>
 
+</section>
 <!-- GUIDE -->
 
 <section class="guide">
@@ -677,73 +670,81 @@ verify users, and manage smart attendance using futuristic AI technology.
 <div class="guide-grid">
 
 <div class="guide-card">
+
+<div class="icon">🔐</div>
+
+<h2>STEP 1 — LOGIN SYSTEM</h2>
+
+<p>
+Open SANZ SecureFace AI login page.
+Enter admin email and password correctly.
+After successful authentication, dashboard opens automatically.
+</p>
+
+</div>
+
+<div class="guide-card">
+
 <div class="icon">👤</div>
 
-<h2>STEP 1 — REGISTER FACE</h2>
+<h2>STEP 2 — REGISTER NEW USER</h2>
 
 <p>
-Open the register page and upload a clear face image with proper lighting.
-Enter the user name and save the AI face profile.
+Open Register page from dashboard.
+Enter student or employee name and upload clear face image.
+AI system stores facial data securely.
 </p>
 
 </div>
 
 <div class="guide-card">
+
 <div class="icon">📷</div>
 
-<h2>STEP 2 — START LIVE SCAN</h2>
+<h2>STEP 3 — START LIVE SCAN</h2>
 
 <p>
-Open live scan page and allow camera permission.
-AI system automatically activates face detection.
+Open Live Scan page and allow camera access.
+AI detection system automatically starts scanning faces in real-time.
 </p>
 
 </div>
 
 <div class="guide-card">
+
 <div class="icon">🧠</div>
 
-<h2>STEP 3 — AI DETECTION</h2>
+<h2>STEP 4 — FACE VERIFICATION</h2>
 
 <p>
-Deep learning system compares detected face with stored biometric data
-and verifies user identity in real time.
+AI compares detected face with registered database
+and verifies user identity using deep learning technology.
 </p>
 
 </div>
 
 <div class="guide-card">
+
 <div class="icon">📊</div>
 
-<h2>STEP 4 — ATTENDANCE SAVED</h2>
+<h2>STEP 5 — ATTENDANCE MARKING</h2>
 
 <p>
-Attendance details automatically stored in database and visible inside
-analytics dashboard instantly.
+When face match is successful,
+attendance is automatically marked and saved inside dashboard records.
 </p>
 
 </div>
 
 <div class="guide-card">
-<div class="icon">☁️</div>
 
-<h2>STEP 5 — CLOUD SYNC</h2>
+<div class="icon">⚙️</div>
 
-<p>
-All attendance records are securely synced with online cloud database
-for safe storage and access.
-</p>
-
-</div>
-
-<div class="guide-card">
-<div class="icon">🔒</div>
-
-<h2>STEP 6 — SECURITY CONTROL</h2>
+<h2>STEP 6 — MANAGE DASHBOARD</h2>
 
 <p>
-Admin authentication and AI session management help prevent unauthorized
-access and duplicate attendance.
+Dashboard allows admins to view attendance history,
+registered users, analytics, and system activity instantly.
 </p>
 
 </div>
@@ -872,16 +873,6 @@ Advanced AI-powered face recognition attendance and security platform.
 
 </div>
 
-<div class="footer-box">
-
-<h3>NAVIGATION</h3>
-
-<a href="index.html">Home</a>
-<a href="features.html">Features</a>
-<a href="user-guide.html">User Guide</a>
-<a href="dashboard.html">Dashboard</a>
-
-</div>
 
 <div class="footer-box">
 
@@ -916,17 +907,6 @@ Advanced AI-powered face recognition attendance and security platform.
 </div>
 
 </footer>
-  <script>
-
-function logout(){
-
-localStorage.removeItem("loggedIn");
-
-window.location.href = "login.html";
-
-}
-
-</script>
 <script>
 
 function toggleNav(){

@@ -1,1 +1,38 @@
-[]
+[
+  {
+    "id": "admin001",
+    "name": "System Admin",
+    "email": "admin@sanz.ai",
+    "password": "admin123",
+    "role": "admin",
+    "department": "Administration",
+    "avatar": null,
+    "faceDescriptor": null,
+    "createdAt": "2026-05-08T06:43:33.227Z"
+  },
+  {
+    "id": "mentor001",
+    "name": "Dr. Ramesh Kumar",
+    "email": "mentor@sanz.ai",
+    "password": "mentor123",
+    "role": "mentor",
+    "department": "Computer Science",
+    "avatar": null,
+    "faceDescriptor": null,
+    "assignedStudents": [],
+    "createdAt": "2026-05-08T06:43:33.235Z"
+  },
+  {
+    "id": "student001",
+    "name": "Arjun Sharma",
+    "email": "student@sanz.ai",
+    "password": "student123",
+    "role": "student",
+    "department": "Computer Science",
+    "rollNo": "CS2024001",
+    "avatar": null,
+    "faceDescriptor": null,
+    "mentorId": "mentor001",
+    "createdAt": "2026-05-08T06:43:33.235Z"
+  }
+]

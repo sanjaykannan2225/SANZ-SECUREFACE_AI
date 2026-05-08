@@ -1,611 +1,625 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="SANZ SecureFace AI is an AI-powered face recognition attendance and security system developed using Node.js, JavaScript and face-api.js.">
-<meta name="keywords" content="AI Attendance System, Face Recognition, SecureFace AI, SANZ AI, Smart Attendance System">
-<link rel="icon" href="uploads/logo (2).png">
-<title>SANZ SecureFace AI - Face Recognition Attendance System</title>
-
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sanz SecureFace AI — Login</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@300;400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
 <style>
+  :root {
+    --neon-cyan: #00f5ff;
+    --neon-blue: #0080ff;
+    --neon-purple: #7b2fff;
+    --dark-bg: #020812;
+    --panel-bg: rgba(0, 20, 50, 0.85);
+    --border-glow: rgba(0, 245, 255, 0.3);
+    --text-primary: #e0f7ff;
+    --text-muted: rgba(150, 200, 230, 0.6);
+    --danger: #ff2d55;
+    --success: #00ff88;
+  }
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial;
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Rajdhani', sans-serif;
+    background: var(--dark-bg);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* ── Animated Background ── */
+  .bg-grid {
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(0,245,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,245,255,0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: gridScroll 20s linear infinite;
+  }
+  @keyframes gridScroll { to { transform: translateY(50px); } }
+
+  .bg-orbs {
+    position: fixed; inset: 0; pointer-events: none;
+  }
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.12;
+    animation: orbFloat 8s ease-in-out infinite alternate;
+  }
+  .orb-1 { width: 400px; height: 400px; background: var(--neon-blue); top: -10%; left: -10%; animation-duration: 10s; }
+  .orb-2 { width: 300px; height: 300px; background: var(--neon-cyan); bottom: -5%; right: -5%; animation-duration: 7s; animation-delay: -3s; }
+  .orb-3 { width: 200px; height: 200px; background: var(--neon-purple); top: 40%; left: 60%; animation-duration: 12s; animation-delay: -6s; }
+  @keyframes orbFloat { from { transform: translate(0, 0) scale(1); } to { transform: translate(20px, -20px) scale(1.1); } }
+
+  /* Scanline effect */
+  .scanlines {
+    position: fixed; inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+    pointer-events: none; z-index: 0;
+  }
+
+  /* ── Main Panel ── */
+  .login-wrapper {
+    position: relative; z-index: 10;
+    width: 100%; max-width: 480px;
+    padding: 20px;
+  }
+
+  /* Logo */
+  .brand {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .brand-icon {
+    width: 72px; height: 72px;
+    margin: 0 auto 16px;
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .brand-icon svg {
+    width: 72px; height: 72px;
+    filter: drop-shadow(0 0 12px var(--neon-cyan));
+  }
+  .brand-name {
+    font-family: 'Orbitron', monospace;
+    font-size: 22px; font-weight: 900;
+    letter-spacing: 4px;
+    background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    text-transform: uppercase;
+  }
+  .brand-tagline {
+    font-size: 11px; letter-spacing: 3px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-top: 4px;
+    font-family: 'Share Tech Mono', monospace;
+  }
+
+  /* Role Selector */
+  .role-selector {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+  .role-btn {
+    background: rgba(0, 245, 255, 0.04);
+    border: 1px solid rgba(0,245,255,0.15);
+    border-radius: 10px;
+    padding: 14px 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    color: var(--text-muted);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 13px; font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    display: flex; flex-direction: column;
+    align-items: center; gap: 8px;
+  }
+  .role-btn svg { width: 28px; height: 28px; transition: all 0.3s; }
+  .role-btn:hover {
+    border-color: var(--neon-cyan);
+    color: var(--neon-cyan);
+    background: rgba(0,245,255,0.08);
+    transform: translateY(-2px);
+  }
+  .role-btn.active {
+    border-color: var(--neon-cyan);
+    background: rgba(0,245,255,0.12);
+    color: var(--neon-cyan);
+    box-shadow: 0 0 20px rgba(0,245,255,0.2), inset 0 0 20px rgba(0,245,255,0.05);
+  }
+  .role-btn.active svg { filter: drop-shadow(0 0 6px var(--neon-cyan)); }
+
+  /* Panel */
+  .login-panel {
+    background: var(--panel-bg);
+    border: 1px solid var(--border-glow);
+    border-radius: 16px;
+    padding: 32px;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 0 40px rgba(0,245,255,0.08), 0 20px 60px rgba(0,0,0,0.5);
+    position: relative;
+    overflow: hidden;
+  }
+  .login-panel::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+  }
+
+  .panel-header {
+    margin-bottom: 24px;
+  }
+  .panel-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 16px; font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .panel-subtitle {
+    font-size: 13px; color: var(--text-muted);
+    margin-top: 4px; letter-spacing: 0.5px;
+  }
+  .role-badge {
+    display: inline-block;
+    background: rgba(0,245,255,0.15);
+    border: 1px solid var(--neon-cyan);
+    color: var(--neon-cyan);
+    font-family: 'Orbitron', monospace;
+    font-size: 10px; letter-spacing: 2px;
+    padding: 3px 10px; border-radius: 20px;
+    margin-top: 8px;
+    text-transform: uppercase;
+  }
+
+  /* Form */
+  .form-group { margin-bottom: 20px; }
+  .form-label {
+    display: block;
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    font-family: 'Share Tech Mono', monospace;
+  }
+  .form-input {
+    width: 100%;
+    background: rgba(0,245,255,0.04);
+    border: 1px solid rgba(0,245,255,0.2);
+    border-radius: 8px;
+    padding: 13px 16px;
+    color: var(--text-primary);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 15px; font-weight: 500;
+    outline: none;
+    transition: all 0.3s;
+    letter-spacing: 0.5px;
+  }
+  .form-input::placeholder { color: rgba(150,200,230,0.3); font-size: 14px; }
+  .form-input:focus {
+    border-color: var(--neon-cyan);
+    background: rgba(0,245,255,0.08);
+    box-shadow: 0 0 0 2px rgba(0,245,255,0.1), 0 0 20px rgba(0,245,255,0.08);
+  }
+
+  /* Button */
+  .btn-login {
+    width: 100%;
+    background: linear-gradient(135deg, rgba(0,245,255,0.2), rgba(0,128,255,0.2));
+    border: 1px solid var(--neon-cyan);
+    border-radius: 8px;
+    color: var(--neon-cyan);
+    font-family: 'Orbitron', monospace;
+    font-size: 13px; font-weight: 700;
+    letter-spacing: 3px;
+    padding: 15px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-transform: uppercase;
+    position: relative; overflow: hidden;
+    margin-top: 8px;
+  }
+  .btn-login::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue));
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .btn-login:hover {
+    box-shadow: 0 0 30px rgba(0,245,255,0.4);
+    transform: translateY(-1px);
+    color: #000;
+  }
+  .btn-login:hover::before { opacity: 1; }
+  .btn-login span { position: relative; z-index: 1; }
+  .btn-login.loading { pointer-events: none; opacity: 0.7; }
+
+  /* Error */
+  .error-msg {
+    background: rgba(255,45,85,0.1);
+    border: 1px solid rgba(255,45,85,0.3);
+    border-radius: 8px;
+    color: var(--danger);
+    padding: 12px 16px;
+    font-size: 13px; letter-spacing: 0.5px;
+    margin-bottom: 16px;
+    display: none;
+    animation: shake 0.3s ease;
+  }
+  .error-msg.show { display: block; }
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+  }
+
+  /* Footer hint */
+  .demo-hints {
+    margin-top: 24px;
+    padding: 16px;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 10px;
+  }
+  .demo-hints h4 {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px; color: var(--text-muted);
+    letter-spacing: 2px; text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .hint-item {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px; color: rgba(150,200,230,0.5);
+    line-height: 1.8;
+  }
+  .hint-role { color: var(--neon-cyan); }
+
+  /* Corner decorations */
+  .corner { position: absolute; width: 16px; height: 16px; }
+  .corner-tl { top: 12px; left: 12px; border-top: 2px solid var(--neon-cyan); border-left: 2px solid var(--neon-cyan); }
+  .corner-tr { top: 12px; right: 12px; border-top: 2px solid var(--neon-cyan); border-right: 2px solid var(--neon-cyan); }
+  .corner-bl { bottom: 12px; left: 12px; border-bottom: 2px solid var(--neon-cyan); border-left: 2px solid var(--neon-cyan); }
+  .corner-br { bottom: 12px; right: 12px; border-bottom: 2px solid var(--neon-cyan); border-right: 2px solid var(--neon-cyan); }
+  
+  .back-home{
+  text-align:center;
+  margin-top:20px;
 }
 
+.home-btn{
+  color:#00f7ff;
+  text-decoration:none;
+  font-size:14px;
+  letter-spacing:1px;
+  transition:0.3s;
+}
+
+.home-btn:hover{
+  color:#00ff88;
+  text-shadow:0 0 10px #00ff88;
+}
+
+  /* Status dot */
+  .status-bar {
+    display: flex; align-items: center; gap: 8px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px; color: var(--text-muted);
+    margin-top: 20px; justify-content: center;
+    letter-spacing: 1px;
+  }
+  .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--success); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+  /* ===== MOBILE RESPONSIVE ===== */
+
+html,
 body{
-background:#020617;
-color:white;
-min-height:100vh;
-display:flex;
-justify-content:center;
-align-items:flex-start;
-overflow-y:auto;
+width:100%;
 overflow-x:hidden;
-padding:40px 20px;
-position:relative;
-}
-/* GRID BACKGROUND */
-
-body::before{
-content:'';
-position:absolute;
-width:100%;
-height:100%;
-background:
-linear-gradient(rgba(0,212,255,0.08) 1px, transparent 1px),
-linear-gradient(90deg, rgba(0,212,255,0.08) 1px, transparent 1px);
-background-size:40px 40px;
-z-index:-2;
+scroll-behavior:smooth;
 }
 
-/* GLOW EFFECT */
+/* LOGIN + REGISTER */
 
-body::after{
-content:'';
-position:absolute;
-width:500px;
-height:500px;
-background:radial-gradient(circle, rgba(0,212,255,0.15), transparent 70%);
-top:-100px;
-right:-100px;
-z-index:-1;
+.login-wrapper,
+.register-wrapper{
+padding:20px;
+min-height:100vh;
+overflow-y:auto;
 }
 
-/* MAIN CONTAINER */
-
-.container{
-display:flex;
-flex-direction:column;
-align-items:center;
-justify-content:center;
-gap:60px;
-width:100%;
-padding-bottom:40px;
-}
-/* ── AI FACE VISUAL ───────────────────── */
-
-.hero-visual {
-display:flex;
-align-items:center;
-justify-content:center;
-position:relative;
-}
-
-.face-scanner {
-position:relative;
-width:320px;
-height:320px;
-}
-
-/* RINGS */
-
-.scanner-ring {
-position:absolute;
-border-radius:50%;
-border:1px solid;
-animation:ringPulse 3s ease infinite;
-}
-
-.scanner-ring:nth-child(1) {
-inset:0;
-border-color:rgba(0,212,255,0.4);
-animation-delay:0s;
-}
-
-.scanner-ring:nth-child(2) {
-inset:20px;
-border-color:rgba(0,212,255,0.3);
-animation-delay:0.5s;
-}
-
-.scanner-ring:nth-child(3) {
-inset:40px;
-border-color:rgba(180,0,255,0.3);
-animation-delay:1s;
-}
-
-@keyframes ringPulse {
-0%,100%{
-opacity:0.3;
-transform:scale(1);
-}
-50%{
-opacity:1;
-transform:scale(1.03);
-}
-}
-
-/* FACE AREA */
-
-.scanner-face-area{
-position:absolute;
-inset:60px;
-border-radius:50%;
-background:radial-gradient(circle, rgba(0,212,255,0.08) 0%, transparent 70%);
-display:flex;
-align-items:center;
-justify-content:center;
-}
-
-/* FACE ICON */
-
-.face-icon{
-font-size:5rem;
-animation:faceFloat 4s ease infinite;
-filter:drop-shadow(0 0 20px rgba(0,212,255,0.7));
-}
-
-@keyframes faceFloat{
-0%,100%{
-transform:translateY(0);
-}
-50%{
-transform:translateY(-10px);
-}
-}
-
-/* SCAN LINE */
-
-.scan-line{
-position:absolute;
-left:50%;
-top:40px;
-transform:translateX(-50%);
-width:220px;
-height:2px;
-background:linear-gradient(
-90deg,
-transparent,
-#00d4ff,
-transparent
-);
-box-shadow:0 0 20px #00d4ff;
-animation:scanMove 3s linear infinite;
-}
-
-@keyframes scanMove{
-0%{
-top:40px;
-opacity:0;
-}
-10%{
-opacity:1;
-}
-50%{
-opacity:1;
-}
-100%{
-top:260px;
-opacity:0;
-}
-}
-
-/* BRACKETS */
-
-.scan-bracket{
-position:absolute;
-width:35px;
-height:35px;
-border:3px solid #00d4ff;
-}
-
-.scan-bracket.tl{
-top:40px;
-left:40px;
-border-right:none;
-border-bottom:none;
-}
-
-.scan-bracket.tr{
-top:40px;
-right:40px;
-border-left:none;
-border-bottom:none;
-}
-
-.scan-bracket.bl{
-bottom:40px;
-left:40px;
-border-right:none;
-border-top:none;
-}
-
-.scan-bracket.br{
-bottom:40px;
-right:40px;
-border-left:none;
-border-top:none;
-}
-
-/* DATA */
-
-.scanner-data{
-position:absolute;
-right:-90px;
-top:50%;
-transform:translateY(-50%);
-display:flex;
-flex-direction:column;
-gap:12px;
-font-size:0.8rem;
-color:#00d4ff;
-font-family:monospace;
-}
-
-.data-item{
-margin:3px 0;
-letter-spacing:1px;
-}
-
-/* LOGIN BOX */
-
-.login-box{
+.login-panel,
+.register-panel{
 width:100%;
 max-width:420px;
-padding:40px;
-border:1px solid rgba(0,212,255,0.3);
-background:rgba(0,0,0,0.5);
-backdrop-filter:blur(10px);
-border-radius:20px;
-box-shadow:0 0 30px rgba(0,212,255,0.2);
+margin:auto;
 }
 
-/* LOGO */
+/* DASHBOARD */
 
-.logo{
-font-size:32px;
-font-weight:bold;
-text-align:center;
-margin-bottom:10px;
-}
-
-.logo span{
-color:#00d4ff;
-}
-
-.subtitle{
-text-align:center;
-color:#aaa;
-margin-bottom:30px;
-}
-
-/* INPUTS */
-
-.input-box{
-margin-bottom:20px;
-}
-
-.input-box input{
-width:100%;
-padding:15px;
-background:#07111f;
-border:1px solid rgba(0,212,255,0.3);
-border-radius:12px;
-color:white;
-font-size:16px;
-outline:none;
+.sidebar{
 transition:0.3s;
 }
 
-.input-box input:focus{
-border-color:#00d4ff;
-box-shadow:0 0 15px rgba(0,212,255,0.3);
-}
-
-/* BUTTON */
-
-.login-btn{
+.main{
 width:100%;
+overflow-x:hidden;
 padding:15px;
-border:none;
-border-radius:12px;
-background:linear-gradient(90deg,#00d4ff,#6a00ff);
-color:white;
-font-size:16px;
-font-weight:bold;
-cursor:pointer;
-transition:0.3s;
 }
 
-.login-btn:hover{
-transform:scale(1.03);
-box-shadow:0 0 20px rgba(0,212,255,0.4);
-}
-
-/* FOOTER */
-
-.footer{
-margin-top:30px;
-text-align:center;
-}
-
-.footer-line{
-width:100%;
-height:1px;
-background:rgba(0,212,255,0.2);
-margin-bottom:20px;
-}
-
-.footer-brand{
-font-size:16px;
-font-weight:bold;
-color:#00d4ff;
-margin-bottom:8px;
-letter-spacing:2px;
-}
-
-.footer-desc{
-font-size:13px;
-color:#888;
-margin-bottom:10px;
-line-height:1.5;
-}
-
-.footer-status{
-font-size:13px;
-color:#00ff88;
-margin-bottom:15px;
-}
-
-.footer-socials{
+.content-row{
 display:flex;
-justify-content:center;
-gap:15px;
-margin-bottom:15px;
+gap:20px;
 flex-wrap:wrap;
 }
 
-.footer-socials a{
-text-decoration:none;
-color:#00d4ff;
-font-size:13px;
-transition:0.3s;
+.panel-card{
+width:100%;
+overflow:hidden;
 }
 
-.footer-socials a:hover{
-color:#6a00ff;
+/* TABLE RESPONSIVE */
+
+table{
+width:100%;
+overflow-x:auto;
+display:block;
 }
 
-.footer-copy{
-font-size:12px;
-color:#666;
-}
+/* IMAGE RESPONSIVE */
 
-/* ERROR */
-
-.error{
-margin-top:15px;
-text-align:center;
-color:red;
-display:none;
+img{
+max-width:100%;
+height:auto;
 }
 
 /* MOBILE */
 
 @media(max-width:768px){
 
-.face-scanner{
-width:260px;
-height:260px;
+body{
+overflow-x:hidden;
 }
 
-.face-icon{
-font-size:4rem;
+/* LOGIN */
+
+.login-panel,
+.register-panel{
+padding:20px;
+border-radius:20px;
 }
 
-.login-box{
-padding:30px 20px;
+/* DASHBOARD */
+
+.sidebar{
+width:100%;
+position:relative;
+height:auto;
 }
 
-.logo{
-font-size:26px;
+.main{
+margin-left:0;
+width:100%;
+padding:10px;
+}
+
+.content-row{
+flex-direction:column;
+}
+
+.topbar{
+flex-direction:column;
+gap:10px;
+align-items:flex-start;
+}
+
+.user-card{
+width:100%;
+}
+
+.panel-card{
+padding:15px;
+}
+
+/* BUTTON */
+
+button{
+width:100%;
+}
+
+/* INPUT */
+
+input,
+select{
+width:100%;
+}
+
+/* NAVBAR */
+
+.nav-links{
+flex-direction:column;
+gap:10px;
 }
 
 }
-@media(max-width:768px){
-
-.face-scanner{
-width:260px;
-height:260px;
+::-webkit-scrollbar{
+width:6px;
+height:6px;
 }
 
-.face-icon{
-font-size:4rem;
-}
-
-.scanner-data{
-position:absolute;
-bottom:-70px;
-left:50%;
-right:auto;
-top:auto;
-transform:translateX(-50%);
-align-items:center;
-}
-
-.login-box{
-padding:30px 20px;
-margin-top:30px;
-}
-
-.logo{
-font-size:26px;
-}
-
+::-webkit-scrollbar-thumb{
+background:#00d4ff;
+border-radius:10px;
 }
 </style>
 </head>
-
 <body>
+<div class="bg-grid"></div>
+<div class="bg-orbs">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+<div class="scanlines"></div>
 
-<div class="container">
+<div class="login-wrapper">
 
-<!-- AI FACE SCANNER -->
+  <!-- Brand -->
+  <div class="brand">
+    <div class="brand-icon">
+      <svg viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="36" cy="36" r="34" stroke="#00f5ff" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <circle cx="36" cy="36" r="24" stroke="#00f5ff" stroke-width="1" opacity="0.5"/>
+        <path d="M36 16 L42 28 L36 26 L30 28 Z" fill="#00f5ff" opacity="0.8"/>
+        <path d="M36 56 L42 44 L36 46 L30 44 Z" fill="#00f5ff" opacity="0.5"/>
+        <circle cx="36" cy="36" r="8" stroke="#00f5ff" stroke-width="1.5"/>
+        <circle cx="36" cy="36" r="3" fill="#00f5ff"/>
+        <line x1="16" y1="36" x2="28" y2="36" stroke="#00f5ff" stroke-width="1"/>
+        <line x1="44" y1="36" x2="56" y2="36" stroke="#00f5ff" stroke-width="1"/>
+        <circle cx="22" cy="24" r="2" fill="#00f5ff" opacity="0.5"/>
+        <circle cx="50" cy="24" r="2" fill="#00f5ff" opacity="0.5"/>
+        <circle cx="22" cy="48" r="2" fill="#00f5ff" opacity="0.3"/>
+        <circle cx="50" cy="48" r="2" fill="#00f5ff" opacity="0.3"/>
+      </svg>
+    </div>
+    <div class="brand-name">SANZ SecureFace AI</div>
+    <div class="brand-tagline">Sanz Neural Recognition System v2.0</div>
+  </div>
 
-<div class="hero-visual">
+  <!-- Role Selector -->
+  <div class="role-selector">
+    <button class="role-btn active" data-role="admin" onclick="selectRole('admin', this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M12 2L3 7l9 5 9-5-9-5z"/><path d="M3 12l9 5 9-5"/><path d="M3 17l9 5 9-5"/>
+      </svg>
+      Admin
+    </button>
+    <button class="role-btn" data-role="mentor" onclick="selectRole('mentor', this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+        <path d="M16 3.5 L20 7 L16 10.5" stroke-width="1.2" opacity="0.7"/>
+      </svg>
+      Mentor
+    </button>
+    <button class="role-btn" data-role="student" onclick="selectRole('student', this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+        <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+      </svg>
+      Student
+    </button>
+  </div>
 
-<div class="face-scanner">
 
-<div class="scanner-ring"></div>
-<div class="scanner-ring"></div>
-<div class="scanner-ring"></div>
 
-<div class="scan-bracket tl"></div>
-<div class="scan-bracket tr"></div>
-<div class="scan-bracket bl"></div>
-<div class="scan-bracket br"></div>
+  <!-- Login Panel -->
+  <div class="login-panel">
+    <div class="corner corner-tl"></div>
+    <div class="corner corner-tr"></div>
+    <div class="corner corner-bl"></div>
+    <div class="corner corner-br"></div>
 
-<div class="scan-line"></div>
+    <div class="panel-header">
+      <div class="panel-title">Access Control</div>
+      <div class="panel-subtitle">Authenticate to enter the system</div>
+      <div class="role-badge" id="roleBadge">⬡ Admin Portal</div>
+    </div>
 
-<div class="scanner-face-area">
-<div class="face-icon">🤖</div>
+    <div class="error-msg" id="errorMsg"></div>
+
+    <div class="form-group">
+      <label class="form-label">Email Address</label>
+      <input type="email" class="form-input" id="email" placeholder="user@sanz.ai" autocomplete="off" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <input type="password" class="form-input" id="password" placeholder="••••••••" />
+    </div>
+
+    <button class="btn-login" id="loginBtn" onclick="handleLogin()">
+      <span>⟶ Authenticate</span>
+    </button>
+
+<div class="back-home">
+  <a href="http://localhost:3000/" class="home-btn">
+    ← Back to Home
+  </a>
 </div>
 
-<div class="scanner-data">
-<div class="data-item">FACE_ID: 0xA3F2</div>
-<div class="data-item">CONF: 99.7%</div>
-<div class="data-item">MATCH: ✅</div>
-</div>
-
-</div>
-
-</div>
-
-<!-- LOGIN BOX -->
-
-<div class="login-box">
-
-<div class="logo">
-SANZ <span>SECUREFACE AI</span>
-</div>
-
-<div class="subtitle">
-Secure AI Attendance Login
-</div>
-
-<div class="input-box">
-<input type="text" id="username" placeholder="Username">
-</div>
-
-<div class="input-box">
-<input type="password" id="password" placeholder="Password">
-</div>
-
-<button class="login-btn" onclick="login()">
-LOGIN
-</button>
-
-<div class="error" id="error">
-Invalid Username or Password
-</div>
-
-<div class="footer">
-
-<div class="footer-line"></div>
-
-<div class="footer-brand">
-SANZ SECUREFACE AI
-</div>
-
-<div class="footer-desc">
-AI-powered biometric attendance & security platform
-</div>
-
-<div class="footer-status">
-🟢 Secure Server Connected
-</div>
-
-<div class="footer-socials">
-
-<a href="https://github.com/sanjaykannan2225" target="_blank">
-GitHub
-</a>
-
-<a href="https://www.linkedin.com/in/sanjayk017/" target="_blank">
-LinkedIn
-</a>
-
-</div>
-
-<div class="footer-copy">
-© 2026 Developed by Sanjay
-</div>
-
-</div>
-
-</div>
-
-</div>
+    <div class="status-bar">
+      <div class="status-dot"></div>
+      AI Facial Recognition System Online
+    </div>
+  </div>
 
 
 <script>
+  let selectedRole = 'admin';
 
-    function speak(text){
+  function selectRole(role, el) {
+    selectedRole = role;
+    document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+    const labels = { admin: '⬡ Admin Portal', mentor: '◈ Mentor Access', student: '◇ Student Portal' };
+    document.getElementById('roleBadge').textContent = labels[role];
+    document.getElementById('errorMsg').classList.remove('show');
+  }
 
-const speech = new SpeechSynthesisUtterance(text);
+  async function handleLogin() {
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const btn = document.getElementById('loginBtn');
+    const err = document.getElementById('errorMsg');
 
-speech.rate = 0.9;
-speech.pitch = 0.8;
-speech.volume = 1;
+    if (!email || !password) {
+      err.textContent = 'Please fill in all fields.';
+      err.classList.add('show'); return;
+    }
 
-speechSynthesis.speak(speech);
+    btn.classList.add('loading');
+    btn.querySelector('span').textContent = '⟳ Authenticating...';
 
-}
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password, role: selectedRole })
+      });
+      const data = await res.json();
+      if (data.success) {
+        btn.querySelector('span').textContent = '✓ Access Granted';
+        setTimeout(() => { window.location.href = '/dashboard'; }, 600);
+      } else {
+        err.textContent = data.message || 'Authentication failed. Check your credentials.';
+        err.classList.add('show');
+        btn.classList.remove('loading');
+        btn.querySelector('span').textContent = '⟶ Authenticate';
+      }
+    } catch (e) {
+      err.textContent = 'Server unreachable. Try again.';
+      err.classList.add('show');
+      btn.classList.remove('loading');
+      btn.querySelector('span').textContent = '⟶ Authenticate';
+    }
+  }
 
-async function login(){
-
-const username =
-document.getElementById('username').value;
-
-const password =
-document.getElementById('password').value;
-
-/* CHANGE HERE */
-
-const res = await fetch("https://sanz-secureface-ai-xezk.onrender.com/login", {
-
-method: "POST",
-
-headers: {
-"Content-Type": "application/json"
-},
-
-body: JSON.stringify({
-username,
-password
-})
-
-});
-
-const data = await res.json();
-
-if(data.success){
-
-speak("Authentication successful");
-
-localStorage.setItem("loggedIn","true");
-
-setTimeout(() => {
-
-window.location.href = "index.html";
-
-}, 3500);
-
-}else{
-
-speak("Access denied");
-
-document.getElementById('error').style.display = "block";
-
-}
-}
+  // Enter key
+  document.addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); });
 
 </script>
-
 </body>
 </html>

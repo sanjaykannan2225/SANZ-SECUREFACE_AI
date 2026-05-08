@@ -809,14 +809,6 @@ transform:translateY(0);
 </head>
 <body>
 
-<script>
-if(localStorage.getItem("loggedIn") !== "true")
-{
-window.location.href = "login.html";
-}
-</script>
-
-
   <!-- Background -->
   <div class="bg-grid"></div>
   <div class="bg-glow"></div>
@@ -852,14 +844,26 @@ SANZ <span>SECUREFACE</span> AI
 </button>
 
 <ul class="nav-links" id="navLinks">
-<li><a href="index.html" class="active">Home</a></li>
-<li><a href="scan.html">Live Scan</a></li>
-<li><a href="register.html">Register</a></li>
-<li><a href="dashboard.html">Dashboard</a></li>
-<li><a href="about.html">ABOUT</a></li>
-<li><a href="features.html">FEATURES</a></li>
-<li><a href="user-guide.html">USER GUIDE</a></li>
-<li><a href="#" onclick="logout()">Logout</a></li>
+<li>
+<a href="index.html">Home</a>
+</li>
+
+<li>
+<a href="about.html">About</a>
+</li>
+
+<li>
+<a href="features.html">Features</a>
+</li>
+
+<li>
+<a href="user-guide.html">User Guide</a>
+</li>
+
+<li>
+<a href="login.html">Login</a>
+</li>
+
 </ul>
 
 <div class="nav-clock" id="navClock">--:--:--</div>

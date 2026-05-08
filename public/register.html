@@ -1,669 +1,272 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Register Face — Sanz SecureFace AI</title>
-  <link rel="stylesheet" href="css/style.css" />
-  <style>
-    .register-page {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 100px 20px 60px;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sanz SecureFace AI — Register</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --neon-cyan:#00f5ff;--neon-blue:#0080ff;--neon-green:#00ff88;
+    --dark-bg:#020812;--panel-bg:rgba(0,20,50,0.88);
+    --border:rgba(0,245,255,0.2);--text-primary:#e0f7ff;
+    --text-muted:rgba(150,200,230,0.6);--danger:#ff2d55;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Rajdhani',sans-serif;background:var(--dark-bg);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;}
+  .bg-grid{position:fixed;inset:0;background-image:linear-gradient(rgba(0,245,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,245,255,0.025) 1px,transparent 1px);background-size:50px 50px;}
+  .orb{position:fixed;border-radius:50%;filter:blur(80px);opacity:0.08;}
+  .orb-1{width:400px;height:400px;background:var(--neon-blue);top:-100px;left:-100px;}
+  .orb-2{width:300px;height:300px;background:var(--neon-cyan);bottom:-50px;right:-50px;}
 
-    .register-container {
-      width: 100%;
-      max-width: 1000px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 40px;
-      align-items: start;
-    }
+  .wrapper{position:relative;z-index:10;width:100%;max-width:560px;}
 
-    .register-left h1 {
-      font-family: var(--font-display);
-      font-size: clamp(1.8rem, 4vw, 3rem);
-      font-weight: 900;
-      margin-bottom: 16px;
-    }
+  .brand{text-align:center;margin-bottom:28px;}
+  .brand-name{font-family:'Orbitron',monospace;font-size:20px;font-weight:800;letter-spacing:4px;background:linear-gradient(135deg,var(--neon-cyan),var(--neon-blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  .brand-sub{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text-muted);letter-spacing:3px;margin-top:4px;}
 
-    .register-left h1 span { color: var(--neon-blue); text-shadow: 0 0 20px rgba(0,212,255,0.4); }
+  .panel{background:var(--panel-bg);border:1px solid var(--border);border-radius:16px;padding:32px;backdrop-filter:blur(20px);box-shadow:0 0 40px rgba(0,245,255,0.07);}
+  .panel::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--neon-cyan),transparent);}
+  .panel-title{font-family:'Orbitron',monospace;font-size:15px;font-weight:700;letter-spacing:2px;color:var(--text-primary);margin-bottom:6px;}
+  .panel-sub{font-size:13px;color:var(--text-muted);margin-bottom:24px;}
 
-    .register-left p {
-      color: var(--text-secondary);
-      font-size: 1rem;
-      line-height: 1.8;
-      margin-bottom: 32px;
-    }
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .form-group{display:flex;flex-direction:column;gap:6px;margin-bottom:4px;}
+  .form-group.full{grid-column:1/-1;}
+  .form-label{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;}
+  .form-input{background:rgba(0,245,255,0.04);border:1px solid rgba(0,245,255,0.15);border-radius:8px;padding:12px 14px;color:var(--text-primary);font-family:'Rajdhani',sans-serif;font-size:14px;outline:none;transition:all 0.2s;width:100%;}
+  .form-input:focus{border-color:var(--neon-cyan);background:rgba(0,245,255,0.08);}
+  .form-input::placeholder{color:rgba(150,200,230,0.25);}
+  select.form-input option{background:#041020;}
 
-    .tips-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
+  .btn{width:100%;background:linear-gradient(135deg,rgba(0,245,255,0.15),rgba(0,128,255,0.1));border:1px solid var(--neon-cyan);border-radius:8px;color:var(--neon-cyan);font-family:'Orbitron',monospace;font-size:12px;font-weight:700;letter-spacing:3px;padding:15px;cursor:pointer;transition:all 0.3s;text-transform:uppercase;margin-top:20px;position:relative;overflow:hidden;}
+  .btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--neon-cyan),var(--neon-blue));opacity:0;transition:opacity 0.3s;}
+  .btn:hover{box-shadow:0 0 30px rgba(0,245,255,0.35);transform:translateY(-1px);color:#000;}
+  .btn:hover::before{opacity:1;}
+  .btn span{position:relative;z-index:1;}
 
-    .tip-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 14px 18px;
-      background: rgba(0,212,255,0.04);
-      border: 1px solid rgba(0,212,255,0.1);
-      border-radius: 10px;
-      font-size: 0.9rem;
-      color: var(--text-secondary);
-    }
+  .alert{padding:12px 16px;border-radius:8px;font-size:13px;margin-bottom:16px;display:none;}
+  .alert.show{display:block;}
+  .alert-error{background:rgba(255,45,85,0.1);border:1px solid rgba(255,45,85,0.3);color:var(--danger);}
+  .alert-success{background:rgba(0,255,136,0.1);border:1px solid rgba(0,255,136,0.3);color:var(--neon-green);}
 
-    .tip-icon { font-size: 1.1rem; }
-
-    /* ── FORM CARD ───────────────────── */
-    .register-form-card {
-      padding: 40px;
-      border-radius: var(--radius-lg);
-    }
-
-    .form-title {
-      font-family: var(--font-display);
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--neon-blue);
-      letter-spacing: 2px;
-      margin-bottom: 28px;
-      text-transform: uppercase;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    /* ── IMAGE UPLOAD ────────────────── */
-    .upload-zone {
-      border: 2px dashed rgba(0,212,255,0.25);
-      border-radius: var(--radius);
-      padding: 40px 20px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      position: relative;
-      margin-bottom: 20px;
-    }
-
-    .upload-zone:hover, .upload-zone.dragover {
-      border-color: var(--neon-blue);
-      background: rgba(0,212,255,0.05);
-    }
-
-    .upload-zone input[type="file"] {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
-      cursor: pointer;
-    }
-
-    .upload-icon {
-      font-size: 2.5rem;
-      margin-bottom: 12px;
-    }
-
-    .upload-text {
-      font-family: var(--font-mono);
-      font-size: 0.8rem;
-      color: var(--neon-blue);
-      letter-spacing: 2px;
-      text-transform: uppercase;
-    }
-
-    .upload-sub {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      margin-top: 6px;
-    }
-
-    /* ── PREVIEW ─────────────────────── */
-    .img-preview-wrap {
-      position: relative;
-      margin-bottom: 20px;
-      border-radius: var(--radius);
-      overflow: hidden;
-      border: 1px solid rgba(0,212,255,0.25);
-      display: none;
-    }
-
-    .img-preview-wrap.visible { display: block; }
-
-    .img-preview {
-      width: 100%;
-      max-height: 280px;
-      object-fit: cover;
-      display: block;
-    }
-
-    .img-preview-overlay {
-      position: absolute;
-      top: 10px; right: 10px;
-      background: rgba(2,8,16,0.8);
-      border: 1px solid rgba(0,212,255,0.3);
-      border-radius: 6px;
-      padding: 4px 12px;
-      font-family: var(--font-mono);
-      font-size: 0.7rem;
-      color: var(--neon-green);
-      letter-spacing: 1px;
-    }
-
-    .scan-overlay {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-    }
-
-    .scan-corner {
-      position: absolute;
-      width: 20px;
-      height: 20px;
-    }
-
-    .scan-corner.tl { top: 10px; left: 10px; border-top: 2px solid var(--neon-blue); border-left: 2px solid var(--neon-blue); }
-    .scan-corner.tr { top: 10px; right: 10px; border-top: 2px solid var(--neon-blue); border-right: 2px solid var(--neon-blue); }
-    .scan-corner.bl { bottom: 10px; left: 10px; border-bottom: 2px solid var(--neon-blue); border-left: 2px solid var(--neon-blue); }
-    .scan-corner.br { bottom: 10px; right: 10px; border-bottom: 2px solid var(--neon-blue); border-right: 2px solid var(--neon-blue); }
-
-    /* ── PROGRESS BAR ─────────────────── */
-    .progress-wrap {
-      height: 3px;
-      background: rgba(0,212,255,0.1);
-      border-radius: 2px;
-      margin: 16px 0;
-      overflow: hidden;
-      display: none;
-    }
-
-    .progress-wrap.visible { display: block; }
-
-    .progress-bar {
-      height: 100%;
-      background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
-      border-radius: 2px;
-      width: 0;
-      transition: width 0.3s ease;
-    }
-
-    /* ── SUCCESS POPUP ────────────────── */
-    .success-popup {
-      position: fixed;
-      inset: 0;
-      z-index: 500;
-      background: rgba(0,0,0,0.7);
-      backdrop-filter: blur(8px);
-      display: none;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .success-popup.show { display: flex; }
-
-    .success-box {
-      background: var(--bg-secondary);
-      border: 1px solid rgba(0,255,136,0.3);
-      border-radius: var(--radius-lg);
-      padding: 48px 40px;
-      text-align: center;
-      max-width: 400px;
-      width: 90%;
-      box-shadow: 0 0 60px rgba(0,255,136,0.15);
-      animation: popIn 0.5s cubic-bezier(0.4,0,0.2,1) forwards;
-    }
-
-    @keyframes popIn {
-      from { transform: scale(0.6); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
-
-    .success-icon {
-      font-size: 4rem;
-      margin-bottom: 20px;
-      animation: bounceIn 0.6s ease forwards;
-    }
-
-    @keyframes bounceIn {
-      0% { transform: scale(0); }
-      60% { transform: scale(1.2); }
-      100% { transform: scale(1); }
-    }
-
-    .success-title {
-      font-family: var(--font-display);
-      font-size: 1.3rem;
-      font-weight: 800;
-      color: var(--neon-green);
-      text-shadow: 0 0 15px rgba(0,255,136,0.5);
-      margin-bottom: 10px;
-      letter-spacing: 2px;
-    }
-
-    .success-name {
-      font-size: 1rem;
-      color: var(--text-secondary);
-      margin-bottom: 28px;
-    }
-
-    /* ── REGISTERED USERS PREVIEW ─────── */
-    .registered-section {
-      margin-top: 24px;
-    }
-
-    .reg-sec-title {
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-      color: var(--neon-blue);
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      margin-bottom: 14px;
-    }
-
-    .user-chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .user-chip {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(0,212,255,0.06);
-      border: 1px solid rgba(0,212,255,0.15);
-      border-radius: 50px;
-      padding: 6px 14px 6px 6px;
-    }
-
-    .user-chip img {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 1px solid rgba(0,212,255,0.3);
-    }
-
-    .user-chip-name {
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: var(--text-secondary);
-    }
-
-    @media (max-width: 768px) {
-      .register-container { grid-template-columns: 1fr; }
-    }
-    /* NAVBAR LOGO */
-
-.nav-logo{
-width:52px;
-height:52px;
-object-fit:contain;
-filter:drop-shadow(0 0 12px rgba(0,212,255,0.7));
+  .back-link{text-align:center;margin-top:20px;font-size:13px;color:var(--text-muted);}
+  .back-link a{color:var(--neon-cyan);text-decoration:none;}
+  .back-link a:hover{text-decoration:underline;}
+  ::-webkit-scrollbar{
+width:6px;
+height:6px;
 }
 
-.nav-brand{
-display:flex;
-align-items:center;
-gap:12px;
-text-decoration:none;
+::-webkit-scrollbar-thumb{
+background:#00d4ff;
+border-radius:10px;
+}
+/* ===== MOBILE RESPONSIVE ===== */
+
+html,
+body{
+width:100%;
+overflow-x:hidden;
+scroll-behavior:smooth;
 }
 
-.nav-brand-text{
-font-size:24px;
-font-weight:bold;
-color:white;
+/* LOGIN + REGISTER */
+
+.login-wrapper,
+.register-wrapper{
+padding:20px;
+min-height:100vh;
+overflow-y:auto;
 }
 
-.nav-brand-text span{
-color:#00d4ff;
+.login-panel,
+.register-panel{
+width:100%;
+max-width:420px;
+margin:auto;
 }
-  </style>
+
+
+/* TABLE RESPONSIVE */
+
+table{
+width:100%;
+overflow-x:auto;
+display:block;
+}
+
+/* IMAGE RESPONSIVE */
+
+img{
+max-width:100%;
+height:auto;
+}
+@media(max-width:768px){
+
+body{
+overflow-x:hidden;
+}
+
+.form-grid{
+grid-template-columns:1fr;
+}
+
+.login-panel,
+.register-panel{
+padding:20px;
+border-radius:20px;
+}
+
+button{
+width:100%;
+}
+
+input,
+select{
+width:100%;
+}
+
+.nav-links{
+flex-direction:column;
+gap:10px;
+}
+
+}
+</style>
 </head>
 <body>
+<div class="bg-grid"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
 
-  <script>
-if(localStorage.getItem("loggedIn") !== "true")
-{
-window.location.href = "login.html";
-}
-</script>
-
-
-  <div class="bg-grid"></div>
-  <div class="bg-glow"></div>
-  <canvas id="particles-canvas"></canvas>
-  <div id="toast-container"></div>
-
-  <!-- Success Popup -->
-  <div class="success-popup" id="successPopup">
-    <div class="success-box">
-      <div class="success-icon">✅</div>
-      <div class="success-title">REGISTERED!</div>
-      <div class="success-name" id="successName">Face registered successfully.</div>
-      <a href="scan.html" class="btn btn-success w-full" style="justify-content: center; margin-bottom: 12px;">
-        ⬡ START SCANNING NOW
-      </a>
-      <button class="btn btn-secondary w-full" style="justify-content: center;" onclick="closeSuccess()">
-        + REGISTER ANOTHER
-      </button>
-    </div>
+<div class="wrapper">
+  <div class="brand">
+    <div class="brand-name">SecureFace AI</div>
+    <div class="brand-sub">// User Registration Portal</div>
   </div>
 
-  <!-- Navbar -->
-  <nav class="navbar">
-<a href="index.html" class="nav-brand">
+  <div class="panel" style="position:relative;">
+    <div class="panel-title">Create Account</div>
+    <div class="panel-sub">Register a new user in the Sanz AI system</div>
 
-<img src="uploads/logo (2).png" class="nav-logo">
+    <div class="alert alert-error" id="errMsg"></div>
+    <div class="alert alert-success" id="succMsg"></div>
 
-<div class="nav-brand-text">
-SANZ <span>SECUREFACE</span> AI
-</div>
-
-</a>
-    <button class="nav-burger" onclick="toggleNav()"><span></span><span></span><span></span></button>
-    <ul class="nav-links" id="navLinks">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="scan.html">Live Scan</a></li>
-      <li><a href="register.html" class="active">Register</a></li>
-      <li><a href="dashboard.html">Dashboard</a></li>
-            <li><a href="about.html">ABOUT</a></li>
-<li><a href="features.html">FEATURES</a></li>
-<li><a href="user-guide.html">USER GUIDE</a></li>
-            <li><a href="#" onclick="logout()">Logout</a></li>
-
-    </ul>
-    <div class="nav-clock" id="navClock">--:--:--</div>
-  </nav>
-
-  <div class="page-wrapper">
-    <div class="register-page">
-      <div class="register-container">
-
-        <!-- Left Info -->
-        <div class="register-left">
-          <div class="section-label">Face Enrollment</div>
-          <h1>Register Your <span>Face</span></h1>
-          <p>
-            Upload a clear frontal face photo and enter your name. Our AI will extract your 
-            128-dimension facial embeddings for accurate real-time recognition.
-          </p>
-
-          <div class="tips-list">
-            <div class="tip-item">
-              <span class="tip-icon">💡</span>
-              Use a clear, well-lit frontal photo
-            </div>
-            <div class="tip-item">
-              <span class="tip-icon">👁</span>
-              Eyes should be clearly visible
-            </div>
-            <div class="tip-item">
-              <span class="tip-icon">📸</span>
-              JPEG, PNG or WEBP — max 10MB
-            </div>
-            <div class="tip-item">
-              <span class="tip-icon">✅</span>
-              Minimum 200×200 pixels recommended
-            </div>
-            <div class="tip-item">
-              <span class="tip-icon">🔒</span>
-              Images stored securely on server
-            </div>
-          </div>
-
-          <!-- Registered Users Preview -->
-          <div class="registered-section">
-            <div class="reg-sec-title">Registered Members</div>
-            <div class="user-chips" id="userChips">
-              <span style="font-size: 0.8rem; color: var(--text-muted);">Loading...</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Right Form -->
-        <div class="register-form-card glass-card">
-          <div class="form-title">
-            <span>🆔</span> Face Registration
-          </div>
-
-          <form id="registerForm" onsubmit="handleRegister(event)">
-            <!-- Name -->
-            <div class="form-group">
-              <label class="form-label">Full Name</label>
-              <input type="text" id="nameInput" class="form-input"
-                placeholder="Enter your full name"
-                required autocomplete="off" />
-            </div>
-
-            <!-- Image Upload -->
-            <div class="form-group">
-              <label class="form-label">Face Photo</label>
-
-              <div class="upload-zone" id="uploadZone"
-                ondragover="dragOver(event)" ondragleave="dragLeave()" ondrop="dropFile(event)">
-                <input type="file" id="imageInput" accept="image/*"
-                  onchange="previewImage(event)" required />
-                <div class="upload-icon">📷</div>
-                <div class="upload-text">CLICK OR DRAG IMAGE</div>
-                <div class="upload-sub">JPG, PNG, WEBP up to 10MB</div>
-              </div>
-
-              <!-- Preview -->
-              <div class="img-preview-wrap" id="previewWrap">
-                <img id="previewImg" class="img-preview" alt="Face Preview" />
-                <div class="scan-overlay">
-                  <div class="scan-corner tl"></div>
-                  <div class="scan-corner tr"></div>
-                  <div class="scan-corner bl"></div>
-                  <div class="scan-corner br"></div>
-                </div>
-                <div class="img-preview-overlay">✅ IMAGE READY</div>
-              </div>
-            </div>
-
-            <!-- Progress -->
-            <div class="progress-wrap" id="progressWrap">
-              <div class="progress-bar" id="progressBar"></div>
-            </div>
-
-            <!-- Submit -->
-            <button type="submit"
-            class="btn btn-primary w-full"
-             id="submitBtn"
-            onclick="speak('Registering face data')"
-              style="justify-content: center; font-size: 0.85rem;">
-              🆔 REGISTER FACE
-            </button>
-          </form>
-        </div>
-
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label">Full Name</label>
+        <input class="form-input" id="name" placeholder="Full Name" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="form-input" id="email" type="email" placeholder="email@sanz.ai" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input class="form-input" id="password" type="password" placeholder="••••••••" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Role</label>
+        <select class="form-input" id="role" onchange="onRoleChange()">
+          <option value="student">Student</option>
+          <option value="mentor">Mentor</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Department</label>
+        <input class="form-input" id="department" placeholder="Computer Science" />
+      </div>
+      <div class="form-group" id="rollNoRow">
+        <label class="form-label">Roll Number</label>
+        <input class="form-input" id="rollNo" placeholder="CS2024001" />
       </div>
     </div>
+
+    <div class="form-group">
+  <label>Profile Photo</label>
+
+  <input 
+    type="file" 
+    id="photo" 
+    accept="image/*"
+    class="form-input"
+  />
+</div>
+
+    <button class="btn" onclick="register()"><span>⟶ Register Account</span></button>
   </div>
 
-  <script>
-    function updateClock() {
-      document.getElementById('navClock').textContent = new Date().toLocaleTimeString('en-US', { hour12: false });
-    }
-    setInterval(updateClock, 1000); updateClock();
-
-    function toggleNav() { document.getElementById('navLinks').classList.toggle('open'); }
-
-    function previewImage(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = e => {
-        document.getElementById('previewImg').src = e.target.result;
-        document.getElementById('previewWrap').classList.add('visible');
-        document.getElementById('uploadZone').style.display = 'none';
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function dragOver(e) { e.preventDefault(); document.getElementById('uploadZone').classList.add('dragover'); }
-    function dragLeave() { document.getElementById('uploadZone').classList.remove('dragover'); }
-
-    function dropFile(e) {
-      e.preventDefault();
-      dragLeave();
-      const file = e.dataTransfer.files[0];
-      if (file && file.type.startsWith('image/')) {
-        const input = document.getElementById('imageInput');
-        const dt = new DataTransfer();
-        dt.items.add(file);
-        input.files = dt.files;
-        previewImage({ target: input });
-      }
-    }
-
-    async function handleRegister(e) {
-      e.preventDefault();
-      const name = document.getElementById('nameInput').value.trim();
-      const imageFile = document.getElementById('imageInput').files[0];
-      if (!name || !imageFile) return showToast('Please fill all fields', 'error');
-
-      const btn = document.getElementById('submitBtn');
-      btn.disabled = true;
-      btn.textContent = 'REGISTERING...';
-
-      // Progress animation
-      const pw = document.getElementById('progressWrap');
-      const pb = document.getElementById('progressBar');
-      pw.classList.add('visible');
-      pw.style.display = 'block';
-      let prog = 0;
-      const progInterval = setInterval(() => {
-        prog = Math.min(prog + Math.random() * 15, 85);
-        pb.style.width = prog + '%';
-      }, 200);
-
-      const formData = new FormData();
-      formData.append('name', name);
-      formData.append('image', imageFile);
-
-      try {
-        const res = await fetch('/api/register', { method: 'POST', body: formData });
-        const data = await res.json();
-
-        clearInterval(progInterval);
-        pb.style.width = '100%';
-
-        if (res.ok && data.success) {
-          setTimeout(() => {
-            document.getElementById('successName').textContent = `"${data.user.name}" has been registered successfully.`;
-            document.getElementById('successPopup').classList.add('show');
-            speak("Face registered successfully");
-            loadRegisteredUsers();
-          }, 400);
-        } else {
-          showToast(data.error || 'Registration failed', 'error');
-          pw.classList.remove('visible');
-          btn.disabled = false;
-          btn.textContent = '🆔 REGISTER FACE';
-        }
-      } catch (err) {
-        clearInterval(progInterval);
-        showToast('Server error. Is backend running?', 'error');
-        pw.classList.remove('visible');
-        btn.disabled = false;
-        btn.textContent = '🆔 REGISTER FACE';
-      }
-    }
-
-    function closeSuccess() {
-      document.getElementById('successPopup').classList.remove('show');
-      document.getElementById('registerForm').reset();
-      document.getElementById('previewWrap').classList.remove('visible');
-      document.getElementById('uploadZone').style.display = '';
-      document.getElementById('progressWrap').style.display = 'none';
-      document.getElementById('submitBtn').disabled = false;
-      document.getElementById('submitBtn').textContent = '🆔 REGISTER FACE';
-    }
-
-    async function loadRegisteredUsers() {
-      try {
-        const res = await fetch('/api/users');
-        const users = await res.json();
-        const chips = document.getElementById('userChips');
-        if (users.length === 0) {
-          chips.innerHTML = '<span style="font-size:0.8rem;color:var(--text-muted);">No users yet</span>';
-          return;
-        }
-        chips.innerHTML = users.map(u => `
-          <div class="user-chip">
-            <img src="${u.image}" alt="${u.name}" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22><circle cx=%2212%22 cy=%2212%22 r=%2212%22 fill=%22%23051020%22/><text x=%2212%22 y=%2217%22 text-anchor=%22middle%22 fill=%22%2300d4ff%22 font-size=%2214%22>👤</text></svg>'" />
-            <span class="user-chip-name">${u.name}</span>
-          </div>
-        `).join('');
-      } catch(e) { console.log('Could not load users'); }
-    }
-
-    function showToast(msg, type = 'info') {
-      const tc = document.getElementById('toast-container');
-      const t = document.createElement('div');
-      t.className = `toast ${type}`;
-      const icons = { success: '✅', error: '❌', info: 'ℹ️', warning: '⚠️' };
-      t.innerHTML = `<span>${icons[type]}</span> ${msg}`;
-      tc.appendChild(t);
-      setTimeout(() => t.remove(), 4000);
-    }
-
-    // Particles
-    const canvas = document.getElementById('particles-canvas');
-    const ctx = canvas.getContext('2d');
-    function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-    resize();
-    window.addEventListener('resize', resize);
-    const pts = Array.from({length:40}, () => ({
-      x: Math.random() * canvas.width, y: Math.random() * canvas.height,
-      size: Math.random() * 1.5 + 0.5, sx: (Math.random()-.5)*.3, sy: (Math.random()-.5)*.3,
-      opacity: Math.random() * 0.3 + 0.05
-    }));
-    function draw() {
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-      pts.forEach(p => {
-        ctx.beginPath(); ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
-        ctx.fillStyle = `rgba(0,212,255,${p.opacity})`; ctx.fill();
-        p.x += p.sx; p.y += p.sy;
-        if(p.x<0||p.x>canvas.width) p.sx*=-1;
-        if(p.y<0||p.y>canvas.height) p.sy*=-1;
-      });
-      requestAnimationFrame(draw);
-    }
-    draw();
-
-    loadRegisteredUsers();
-  </script>
-
-  <script>
-
-function logout(){
-
-localStorage.removeItem("loggedIn");
-
-window.location.href = "login.html";
-
-}
-
-</script>
+  <div class="back-link">Already have an account? <a href="/login">Login here</a></div>
+</div>
 
 <script>
-function speak(text) {
+function onRoleChange() {
+  document.getElementById('rollNoRow').style.display = document.getElementById('role').value === 'student' ? 'flex' : 'none';
+}
 
-const speech = new SpeechSynthesisUtterance(text);
+async function register() {
+  const err = document.getElementById('errMsg');
+  const succ = document.getElementById('succMsg');
+  [err, succ].forEach(e => e.classList.remove('show'));
 
-speech.lang = "en-US";
-speech.rate = 1;
-speech.pitch = 1;
-speech.volume = 1;
+const formData = new FormData();
 
-window.speechSynthesis.speak(speech);
+formData.append(
+  'name',
+  document.getElementById('name').value.trim()
+);
 
+formData.append(
+  'email',
+  document.getElementById('email').value.trim()
+);
+
+formData.append(
+  'password',
+  document.getElementById('password').value
+);
+
+formData.append(
+  'role',
+  document.getElementById('role').value
+);
+
+formData.append(
+  'department',
+  document.getElementById('department').value.trim()
+);
+
+formData.append(
+  'rollNo',
+  document.getElementById('rollNo').value.trim()
+);
+
+const photo = document.getElementById('photo').files[0];
+
+if(photo){
+  formData.append('photo', photo);
+}
+
+  try {
+    const res = await fetch('/api/users', {
+      method: 'POST',
+body: formData
+    });
+    const data = await res.json();
+    if (data.success) {
+      succ.textContent = 'Account created! Redirecting to login...';
+      succ.classList.add('show');
+      setTimeout(() => window.location.href = '/login', 1800);
+    } else {
+      err.textContent = data.message || 'Registration failed.';
+      err.classList.add('show');
+    }
+  } catch(e) {
+    err.textContent = 'Server error. Please try again.';
+    err.classList.add('show');
+  }
 }
 </script>
 </body>

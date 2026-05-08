@@ -638,12 +638,6 @@ left:0;
 
 <body>
 
-    <script>
-if(localStorage.getItem("loggedIn") !== "true")
-{
-window.location.href = "login.html";
-}
-</script>
 
 <div class="bg-grid"></div>
 <div class="bg-glow"></div>
@@ -670,146 +664,130 @@ SANZ <span>SECUREFACE</span> AI
 
 </button>
 
-<ul class="nav-links">
+<ul class="nav-links" id="navLinks">
 
 <li><a href="index.html">HOME</a></li>
-<li><a href="scan.html">LIVE SCAN</a></li>
-<li><a href="register.html">REGISTER</a></li>
-<li><a href="dashboard.html">DASHBOARD</a></li>
 <li><a href="about.html">ABOUT</a></li>
 <li><a href="features.html" class="active">FEATURES</a></li>
 <li><a href="user-guide.html">USER GUIDE</a></li>
-<li><a href="#" onclick="logout()">Logout</a></li>
 
 </ul>
 
 </nav>
 
 <!-- HERO -->
-
-<section class="hero">
-
+ <section class="hero">
 <div class="hero-tag">
-AI SYSTEM FEATURES
+NEXT GENERATION AI SECURITY
 </div>
 
 <h1>
-Advanced <span>AI Features</span><br>
-for Smart Security
+Powerful <span>SecureFace AI</span><br>
+Features & Automation
 </h1>
 
 <p>
-Explore next-generation AI-powered attendance and facial recognition
-features designed for real-time detection, smart analytics, and secure
-enterprise-grade authentication.
+SANZ SecureFace AI provides real-time facial recognition,
+smart attendance automation, secure authentication,
+AI analytics dashboard, cloud-ready data management,
+and futuristic cyber security experience for modern institutions.
 </p>
-
 </section>
 
 <!-- FEATURES -->
-
-<section class="features">
-
+ <section class="features">
 <div class="features-grid">
-
 <div class="feature-card">
-<div class="icon">🧠</div>
-<h2>AI FACE RECOGNITION</h2>
+<div class="icon">🤖</div>
+<h2>REAL-TIME AI DETECTION</h2>
 <p>
-Deep learning powered biometric system for highly accurate facial matching and recognition.
+Advanced neural AI engine instantly detects and verifies faces with high-speed biometric processing.
 </p>
 </div>
 
 <div class="feature-card">
-<div class="icon">📷</div>
-<h2>LIVE FACE SCAN</h2>
+<div class="icon">🎯</div>
+<h2>HIGH ACCURACY MATCHING</h2>
 <p>
-Real-time face scanning with lightning-fast detection and confidence monitoring.
+AI-powered recognition system ensures secure and accurate identity verification with confidence tracking.
 </p>
 </div>
 
 <div class="feature-card">
-<div class="icon">📊</div>
-<h2>SMART DASHBOARD</h2>
+<div class="icon">📡</div>
+<h2>LIVE ATTENDANCE TRACKING</h2>
 <p>
-View attendance analytics, scan history, and AI performance statistics instantly.
+Attendance records are updated instantly during live face scanning sessions.
 </p>
 </div>
 
 <div class="feature-card">
-<div class="icon">☁️</div>
-<h2>CLOUD DATABASE</h2>
+<div class="icon">🛡️</div>
+<h2>SECURITY PROTECTION</h2>
 <p>
-Secure attendance storage with automatic syncing and real-time updates.
+Secure authentication system prevents unauthorized access and protects sensitive user data.
 </p>
 </div>
 
 <div class="feature-card">
-<div class="icon">🔒</div>
-<h2>SECURE LOGIN</h2>
+<div class="icon">📈</div>
+<h2>SMART ANALYTICS</h2>
 <p>
-Advanced authentication and admin-level protection for secure access control.
+Interactive dashboard provides attendance statistics, AI reports, and live activity monitoring.
 </p>
 </div>
 
 <div class="feature-card">
-<div class="icon">⚡</div>
-<h2>FAST PERFORMANCE</h2>
+<div class="icon">⚙️</div>
+<h2>FULLY AUTOMATED SYSTEM</h2>
 <p>
-Optimized AI engine delivers ultra-fast recognition and smooth user experience.
+From registration to attendance storage, the entire workflow is handled automatically using AI.
 </p>
 </div>
-
 </div>
-
 </section>
 
 <!-- HOW -->
-
-<section class="how">
+ <section class="how">
 
 <h2 class="section-title">
 How It <span>Works</span>
 </h2>
 
 <div class="steps">
-
 <div class="step">
 <div class="step-number">01</div>
-<h3>REGISTER</h3>
+<h3>REGISTER USER</h3>
 <p>
-Upload face image and create user profile.
+Student or employee details and facial image are securely registered into the AI database.
 </p>
 </div>
 
 <div class="step">
 <div class="step-number">02</div>
-<h3>SCAN FACE</h3>
+<h3>START LIVE SCAN</h3>
 <p>
-AI camera scans and detects face instantly.
+AI camera activates and scans faces in real-time using advanced recognition technology.
 </p>
 </div>
 
 <div class="step">
 <div class="step-number">03</div>
-<h3>VERIFY</h3>
+<h3>AI FACE VERIFICATION</h3>
 <p>
-System matches face using AI recognition engine.
+Detected faces are matched with stored biometric data using deep learning algorithms.
 </p>
 </div>
 
 <div class="step">
 <div class="step-number">04</div>
-<h3>ATTENDANCE</h3>
+<h3>AUTO ATTENDANCE</h3>
 <p>
-Attendance automatically stored in dashboard.
+Attendance is automatically marked and stored inside the secure dashboard system.
 </p>
 </div>
-
 </div>
-
 </section>
-
 <!-- CTA -->
 
 <section class="cta">
@@ -851,13 +829,6 @@ Advanced futuristic face recognition attendance platform powered by deep learnin
 </p>
 </div>
 
-<div class="footer-box">
-<h3>QUICK LINKS</h3>
-
-<a href="index.html">Home</a>
-<a href="scan.html">Live Scan</a>
-<a href="dashboard.html">Dashboard</a>
-</div>
 
 <div class="footer-box">
 <h3>FEATURES</h3>
@@ -884,17 +855,6 @@ Advanced futuristic face recognition attendance platform powered by deep learnin
 
 </footer>
 
-  <script>
-
-function logout(){
-
-localStorage.removeItem("loggedIn");
-
-window.location.href = "login.html";
-
-}
-
-</script>
 <script>
 
 function toggleNav(){

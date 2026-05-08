@@ -489,15 +489,6 @@ display:flex;
 
 <body>
 
-  <script>
-
-if(localStorage.getItem("loggedIn") !== "true"){
-
-window.location.href = "login.html";
-
-}
-
-</script>
 
   <div class="bg-grid"></div>
   <div class="glow"></div>
@@ -526,18 +517,9 @@ SANZ <span>SECUREFACE</span> AI
 
 <div class="nav-links" id="navLinks">
 
-<a href="index.html">HOME</a>
-
-<a href="scan.html">LIVE SCAN</a>
-
-<a href="register.html">REGISTER</a>
-
-<a href="dashboard.html">DASHBOARD</a>
-
 <a href="about.html" style="color:#00d9ff;">ABOUT</a>
 <a href="features.html">FEATURES</a>
-<a href="user-guide.html">USER GUIDE</a
-
+<a href="user-guide.html">USER GUIDE</a>
 <a href="#" onclick="logout()">LOGOUT</a>
 
 </div>
@@ -626,17 +608,6 @@ SANZ <span>SECUREFACE</span> AI
     © 2026 SANZ SECUREFACE AI • Developed By Sanjay
   </div>
 
-  <script>
-
-function logout(){
-
-localStorage.removeItem("loggedIn");
-
-window.location.href = "login.html";
-
-}
-
-</script>
 
 <script>
 
