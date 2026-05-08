@@ -10,6 +10,7 @@ const path = require('path');
 const multer = require('multer');
 const app = express();
 const PORT = 3000;
+app.set('trust proxy', 1);
 
 // ── Middleware ──────────────────────────────────────────────
 app.use(express.json({ limit: '50mb' }));
@@ -22,7 +23,12 @@ app.use(session({
   secret: 'sanz-secureface-ai-2024-ultra-secret',
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 }
+  cookie: {
+  secure: true,
+  httpOnly: true,
+  sameSite: 'lax',
+  maxAge: 24 * 60 * 60 * 1000
+}
 }));
 
 // ── File Upload Config ──────────────────────────────────────
