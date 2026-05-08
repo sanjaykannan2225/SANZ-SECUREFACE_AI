@@ -423,6 +423,15 @@ color:white;
 .nav-brand-text span{
 color:#00d4ff;
 }
+
+.navbar{
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:20px;
+padding:18px 30px;
+flex-wrap:wrap;
+}
 /* ───────────────── MOBILE RESPONSIVE ───────────────── */
 
 @media(max-width:900px){
@@ -511,7 +520,7 @@ left:0;
 width:100%;
 padding:16px 40px;
 display:flex;
-justify-content:space-between;
+justify-content:space-around;
 align-items:center;
 z-index:10000;
 gap:15px;
@@ -549,7 +558,6 @@ display:flex;
 transition:0.4s ease;
 border-top:1px solid rgba(0,212,255,0.1);
 z-index:999;
-gap:30px;
 height:0;
 overflow:hidden;
 opacity:0;
@@ -692,7 +700,8 @@ width:auto;
 padding:0;
 border:none;
 left:0 !important;
-gap:30px;
+gap:18px;
+flex-wrap:wrap;
 height:auto;
 }
 
