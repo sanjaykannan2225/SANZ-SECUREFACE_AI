@@ -10,7 +10,9 @@ const PORT = process.env.PORT || 5000;
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '../public')));
+app.use('/uploads', express.static(path.join(__dirname, '../public/uploads')));
 
 // Ensure data files and folders exist
 const UPLOADS_DIR = path.join(__dirname, '../public/uploads');
@@ -29,7 +31,27 @@ const storage = multer.diskStorage({
     cb(null, unique + path.extname(file.originalname));
   }
 });
-const upload = multer({ storage, limits: { fileSize: 10 * 1024 * 1024 } });
+const upload = multer({
+  storage,
+  limits: { fileSize: 10 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+
+    if (
+      file.mimetype === 'image/jpeg' ||
+      file.mimetype === 'image/png' ||
+      file.mimetype === 'image/jpg'
+    ) {
+
+      cb(null, true);
+
+    } else {
+
+      cb(new Error('Only image files allowed'));
+
+    }
+
+  }
+});
 
 // Helper functions
 const readUsers = () => JSON.parse(fs.readFileSync(USERS_FILE));
@@ -40,63 +62,164 @@ const writeAttendance = (data) => fs.writeFileSync(ATTENDANCE_FILE, JSON.stringi
 // ─── ROUTES ───────────────────────────────────────────────
 
 // Register user
-app.post('/api/register', upload.single('image'), (req, res) => {
-  try {
-    const { name } = req.body;
-    if (!name || !req.file) return res.status(400).json({ error: 'Name and image required' });
+app.post('/api/register', (req, res) => {
 
-    const users = readUsers();
-    const existing = users.find(u => u.name.toLowerCase() === name.toLowerCase());
-    if (existing) return res.status(409).json({ error: 'User already registered' });
+upload.single('image')(req, res, function(err) {
 
-    const newUser = {
-      id: Date.now().toString(),
-      name: name.trim(),
-      image: `/uploads/${req.file.filename}`,
-registeredAt: new Date().toLocaleString('en-IN', {
-  timeZone: 'Asia/Kolkata'
-})
-    };
+if (err) {
 
-    users.push(newUser);
-    writeUsers(users);
-
-    console.log(`✅ Registered: ${name}`);
-    res.json({ success: true, user: newUser });
-  } catch (err) {
-    console.error('Register error:', err);
-    res.status(500).json({ error: 'Registration failed' });
-  }
+console.error(err);
+return res.status(500).json({
+error: err.message || 'Image upload failed'
 });
 
-// Get all users
+}
+
+try {
+
+const { name } = req.body;
+
+if (!name || !req.file) {
+
+return res.status(400).json({
+error: 'Name and image required'
+});
+
+}
+const users = readUsers().filter(
+u => u && u.id && u.name && u.image
+);
+const existing = users.find(
+u => u.name.toLowerCase() === name.toLowerCase()
+);
+
+if (existing) {
+
+return res.status(409).json({
+error: 'User already registered'
+});
+
+}
+
+const newUser = {
+
+id: Date.now().toString(),
+
+name: name.trim(),
+
+image: `/uploads/${req.file.filename}`,
+
+registeredAt: new Date().toLocaleString('en-IN', {
+timeZone: 'Asia/Kolkata'
+})
+
+};
+
+users.push(newUser);
+
+writeUsers(users);
+
+res.json({
+success: true,
+user: newUser
+});
+
+} catch (e) {
+
+console.error(e);
+
+res.status(500).json({
+error: 'Registration failed'
+});
+
+}
+
+});
+
+});
+
+// Delete user
 app.get('/api/users', (req, res) => {
-  try {
-    const users = readUsers();
-    res.json(users);
-  } catch (err) {
-    res.status(500).json({ error: 'Failed to fetch users' });
-  }
+
+try {
+
+const users = readUsers().filter(
+u =>
+u &&
+u.id &&
+u.name &&
+u.image &&
+u.image !== '/undefined'
+);
+
+writeUsers(users);
+
+res.json(users);
+
+} catch (err) {
+
+console.error(err);
+
+res.status(500).json({
+error: 'Failed to fetch users'
+});
+
+}
+
 });
 
 // Delete user
 app.delete('/api/users/:id', (req, res) => {
-  try {
-    let users = readUsers();
-    const user = users.find(u => u.id === req.params.id);
-    if (!user) return res.status(404).json({ error: 'User not found' });
 
-    // Delete image file
-    const imgPath = path.join(__dirname, '../public', user.image);
-    if (fs.existsSync(imgPath)) fs.unlinkSync(imgPath);
+try {
 
-    users = users.filter(u => u.id !== req.params.id);
-    writeUsers(users);
-    res.json({ success: true });
-  } catch (err) {
-    res.status(500).json({ error: 'Delete failed' });
-  }
+let users = readUsers();
+
+const user = users.find(
+u => u.id === req.params.id
+);
+
+if (!user) {
+
+return res.status(404).json({
+error: 'User not found'
 });
+
+}
+
+const imgPath = path.join(
+__dirname,
+'../public',
+user.image
+);
+
+if (fs.existsSync(imgPath)) {
+fs.unlinkSync(imgPath);
+}
+
+users = users.filter(
+u => u.id !== req.params.id
+);
+
+writeUsers(users);
+
+res.json({
+success: true
+});
+
+} catch (err) {
+
+console.error(err);
+
+res.status(500).json({
+error: 'Delete failed'
+});
+
+}
+
+});
+
+// Mark attendance
 
 // Mark attendance
 app.post('/api/attendance', (req, res) => {
@@ -171,7 +294,9 @@ app.delete('/api/attendance/clear', (req, res) => {
 // Dashboard stats
 app.get('/api/dashboard', (req, res) => {
   try {
-    const users = readUsers();
+   const users = readUsers().filter(
+u => u && u.id && u.name && u.image
+);
     const attendance = readAttendance();
     const today = new Date().toLocaleDateString('en-CA', {
   timeZone: 'Asia/Kolkata'

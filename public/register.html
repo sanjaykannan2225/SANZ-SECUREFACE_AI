@@ -547,7 +547,7 @@ SANZ <span>SECUREFACE</span> AI
       formData.append('image', imageFile);
 
       try {
-        const res = await fetch('https://sanz-secureface-ai-xezk.onrender.com/api/register', { method: 'POST', body: formData });
+        const res = await fetch('/api/register', { method: 'POST', body: formData });
         const data = await res.json();
 
         clearInterval(progInterval);
@@ -587,7 +587,7 @@ SANZ <span>SECUREFACE</span> AI
 
     async function loadRegisteredUsers() {
       try {
-        const res = await fetch('https://sanz-secureface-ai-xezk.onrender.com/api/users');
+        const res = await fetch('/api/users');
         const users = await res.json();
         const chips = document.getElementById('userChips');
         if (users.length === 0) {

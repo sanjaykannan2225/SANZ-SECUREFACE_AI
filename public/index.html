@@ -1211,8 +1211,8 @@ function speak(text) {
     if (voices.length > 1) {
         speech.voice = voices[1];
     }
-
-    window.speechSynthesis.speak(speech);
+window.speechSynthesis.cancel();
+window.speechSynthesis.speak(speech);
 }
 
 window.addEventListener("load", () => {
