@@ -730,8 +730,8 @@ SANZ <span>SECUREFACE</span> AI
     // ── LOAD DASHBOARD ─────────────────────────
     async function loadDashboard() {
       try {
-        const res = await fetch('/api/dashboard');
-        const d = await res.json();
+       const res = await fetch('https://sanz-secureface-ai-xezk.onrender.com/api/dashboard');
+const d = await res.json();
 
         // Animate numbers
         animateNum('statUsers', d.totalUsers);
@@ -802,8 +802,8 @@ SANZ <span>SECUREFACE</span> AI
     // ── ATTENDANCE TABLE ───────────────────────
     async function loadAttendance() {
       try {
-        const res = await fetch('/api/attendance');
-        allAttendance = await res.json();
+        const res = await fetch('https://sanz-secureface-ai-xezk.onrender.com/api/attendance');
+allAttendance = await res.json();
         renderAttendanceTable(allAttendance);
       } catch (e) {
         showToast('Failed to load attendance', 'error');
@@ -846,7 +846,7 @@ SANZ <span>SECUREFACE</span> AI
     // ── USERS GALLERY ──────────────────────────
     async function loadUsers() {
       try {
-        const res = await fetch('/api/users');
+       const res = await fetch('https://sanz-secureface-ai-xezk.onrender.com/api/users');
         const users = await res.json();
         document.getElementById('userCountLabel').textContent = users.length;
 
@@ -879,7 +879,7 @@ SANZ <span>SECUREFACE</span> AI
     async function deleteUser(id, name) {
       if (!confirm(`Delete ${name}? This cannot be undone.`)) return;
       try {
-        const res = await fetch(`/api/users/${id}`, { method: 'DELETE' });
+        const res = await fetch(`https://sanz-secureface-ai-xezk.onrender.com/api/users/${id}`, { method: 'DELETE' });
         const data = await res.json();
         if (data.success) {
           showToast(`Deleted: ${name}`, 'success');
@@ -911,7 +911,7 @@ async function clearAttendance() {
   if (!ok) return;
 
   try {
-    const response = await fetch('/api/attendance/clear', {
+    const response = await fetch('https://sanz-secureface-ai-xezk.onrender.com/api/attendance/clear', {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'

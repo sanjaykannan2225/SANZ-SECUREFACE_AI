@@ -564,7 +564,7 @@ SANZ <span>SECUREFACE</span> AI
     let unknownAlertShown = false;
     let frameCount = 0;
     let lastFpsTime = Date.now();
-    const API = '';
+    const API = 'https://sanz-secureface-ai-xezk.onrender.com';
 
     const video = document.getElementById('webcam');
     const canvas = document.getElementById('overlay');
@@ -619,7 +619,7 @@ async function loadModels() {
     // ── LOAD REGISTERED USERS ──────────────────────────────────
     async function loadRegisteredUsers() {
       try {
-        const res = await fetch('/api/users');
+        const res = await fetch('https://sanz-secureface-ai-xezk.onrender.com/api/users')
         const users = await res.json();
 
         // Mini user list
@@ -842,7 +842,7 @@ async function loadModels() {
       markedToday.add(name); // Optimistic lock
       document.getElementById('successSound').play();
       try {
-        const res = await fetch('/api/attendance', {
+       const res = await fetch('https://sanz-secureface-ai-xezk.onrender.com/api/attendance', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ name, matchType })

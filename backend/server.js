@@ -173,7 +173,9 @@ app.get('/api/dashboard', (req, res) => {
   try {
     const users = readUsers();
     const attendance = readAttendance();
-    const today = new Date().toISOString().split('T')[0];
+    const today = new Date().toLocaleDateString('en-CA', {
+  timeZone: 'Asia/Kolkata'
+});
     const todayAttendance = attendance.filter(a => a.date === today);
 
     // Weekly stats
@@ -181,7 +183,9 @@ app.get('/api/dashboard', (req, res) => {
     for (let i = 6; i >= 0; i--) {
       const d = new Date();
       d.setDate(d.getDate() - i);
-      const dateStr = d.toISOString().split('T')[0];
+      const dateStr = d.toLocaleDateString('en-CA', {
+  timeZone: 'Asia/Kolkata'
+});
       const count = attendance.filter(a => a.date === dateStr).length;
       weekStats.push({ date: dateStr, count });
     }
