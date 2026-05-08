@@ -215,6 +215,31 @@ app.get('/api/export', (req, res) => {
   }
 });
 
+// LOGIN API
+
+app.post("/login", (req, res) => {
+
+const { username, password } = req.body;
+
+if (
+username === "Admin" &&
+password === "sanz@2026"
+) {
+
+res.json({
+success: true
+});
+
+} else {
+
+res.json({
+success: false
+});
+
+}
+
+});
+
 // Serve index.html for root
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/index.html'));
